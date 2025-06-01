@@ -24,10 +24,14 @@ const getSleepRecordstByUserId = async (req, res, next) => {
         next(error)
     }
 }
-const getAverageSleepAndWakeTimeController = async (req, res, next) => {
+const getAverageSleepAndWakeTime = async (req, res, next) => {
     try {
         const userId = req.params.userId
-        const result = await sleepRecordsService.getAverageSleepAndWakeTime(userId)
+        const { days } = req.query
+        const result = await sleepRecordsService.getAverageSleepAndWakeTime(
+            userId,
+            days
+        )
         res.status(200).json({
             message: 'Lấy trung bình giờ đi ngủ và giờ thức dậy thành công',
             data: result
@@ -36,10 +40,14 @@ const getAverageSleepAndWakeTimeController = async (req, res, next) => {
         next(error)
     }
 }
-const getWeeklyAverageSleep = async (req, res, next) => {
+const getAverageSleepDurationByDays = async (req, res, next) => {
     try {
         const userId = req.params.userId
-        const result = await sleepRecordsService.getWeeklyAverageSleep(userId)
+        const { days } = req.query
+        const result = await sleepRecordsService.getAverageSleepDurationByDays(
+            userId,
+            days
+        )
         res.status(200).json({
             message: 'Lấy thời gian ngủ trung bình theo tuần thành công',
             data: result
@@ -52,8 +60,12 @@ const getWeeklyAverageSleep = async (req, res, next) => {
 const countDaysWithSleepLessThan6Hours = async (req, res, next) => {
     try {
         const userId = req.params.userId
+        const { days } = req.query
         const result =
-            await sleepRecordsService.countDaysWithSleepLessThan6Hours(userId)
+            await sleepRecordsService.countDaysWithSleepLessThan6Hours(
+                userId,
+                days
+            )
         res.status(200).json({
             message: 'Đếm số ngày ngủ ít hơn 6 tiếng thành công',
             data: result
@@ -65,8 +77,12 @@ const countDaysWithSleepLessThan6Hours = async (req, res, next) => {
 const countDaysWithSleepMoreThan8Hours = async (req, res, next) => {
     try {
         const userId = req.params.userId
+        const { days } = req.query
         const result =
-            await sleepRecordsService.countDaysWithSleepMoreThan8Hours(userId)
+            await sleepRecordsService.countDaysWithSleepMoreThan8Hours(
+                userId,
+                days
+            )
         res.status(200).json({
             message: 'Đếm số ngày ngủ nhiều hơn 8 tiếng thành công',
             data: result
@@ -75,19 +91,16 @@ const countDaysWithSleepMoreThan8Hours = async (req, res, next) => {
         next(error)
     }
 }
-const getSleepRecordsByRange = async (req, res, next) => {
+const getSleepRecordsByDays = async (req, res, next) => {
     try {
-        const userId = req.user._id
-        const { range, from, to } = req.query
-
-        const records = await sleepRecordsService.getSleepRecordsByRange(
+        const userId = req.params.userId || req.user._id
+        const { days } = req.query
+        const data = await sleepRecordsService.getSleepRecordsByDays(
             userId,
-            range,
-            from,
-            to
+            days
         )
 
-        res.json({ records })
+        res.json({ data })
     } catch (error) {
         next(error)
     }
@@ -96,9 +109,9 @@ const getSleepRecordsByRange = async (req, res, next) => {
 export const sleepRecordsController = {
     createNew,
     getSleepRecordstByUserId,
-    getSleepRecordsByRange,
+    getSleepRecordsByDays,
     countDaysWithSleepLessThan6Hours,
     countDaysWithSleepMoreThan8Hours,
-    getAverageSleepAndWakeTimeController,
-    getWeeklyAverageSleep
+    getAverageSleepAndWakeTime,
+    getAverageSleepDurationByDays
 }

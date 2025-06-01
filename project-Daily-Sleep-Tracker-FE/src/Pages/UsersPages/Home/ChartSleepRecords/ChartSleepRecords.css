@@ -1,0 +1,35 @@
+/* ChartSleepRecords.css */
+.chart-sleep-wrapper {
+  width: 100%;
+  min-width: 0;
+}
+
+@media screen and (max-width: 780px) {
+  .chart-sleep-wrapper .recharts-wrapper {
+    font-size: 12px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .chart-sleep-wrapper .recharts-wrapper {
+    font-size: 11px;
+  }
+
+  .chart-sleep-wrapper .text-sm {
+    font-size: 13px;
+  }
+}
+
+@media screen and (max-width: 380px) {
+  .chart-sleep-wrapper .recharts-wrapper {
+    font-size: 10px;
+  }
+
+  .chart-sleep-wrapper .text-sm {
+    font-size: 12px;
+  }
+
+  .chart-sleep-wrapper p {
+    line-height: 1.4;
+  }
+}

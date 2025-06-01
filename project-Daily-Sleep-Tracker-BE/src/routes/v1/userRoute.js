@@ -2,13 +2,15 @@
 
 import express from 'express'
 import { userController } from '~/controllers/userController'
-
+import isAuthorized from '~/middlewares/authMiddleware'
 
 const Router = express.Router()
 
 // Router xác thực dăng nhập của người dùng
 Router.route('/authenticate').post(userController.authenticate)
-
+//
+Router.route('/checkRole').post(userController.checkRole)
+Router.route('/getMyProfile').get(isAuthorized, userController.getMyProfile)
 // Router dang ký tài khoản mới
 Router.route('/register').post(userController.createNew)
 
@@ -17,10 +19,10 @@ Router.route('/logout').post(userController.logout)
 
 Router.route('/refresh_token').get(userController.refreshToken)
 
-Router.route('/verify').post(userController.verifyAccount)
+Router.route('/verifyEmail').post(userController.verifyAccount)
 
-Router.route('/forgot_password').post(userController.forgotPassword)
+Router.route('/forgotPassword').post(userController.forgotPassword)
 
-Router.route('/reset_password').post(userController.resetPassword)
+Router.route('/resetPassword').post(userController.resetPassword)
 
 export const userRoute = Router

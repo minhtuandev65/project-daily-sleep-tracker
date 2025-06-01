@@ -1,4 +1,5 @@
 // sleepRecordsServices.js
+import { ObjectId } from 'mongodb'
 import { sleepRecordsModel } from '~/models/sleepRecordsModel'
 
 const calculateSleepDuration = (sleepTime, wakeTime) => {
@@ -8,32 +9,80 @@ const calculateSleepDuration = (sleepTime, wakeTime) => {
     const durationHours = durationMs / (1000 * 60 * 60)
     return parseFloat(durationHours.toFixed(2))
 }
+const getDaysFromRange = (range) => {
+    const map = {
+        '7days': 7,
+        '30days': 30
+    }
+    return map[range] || 7 // default là 7 ngày nếu không khớp
+}
+
 // Đếm số ngày ngủ ít hơn 6 tiếng
-const countDaysWithSleepLessThan6Hours = async (userId) => {
-    return await sleepRecordsModel.findSleepRecords({
-        userId,
+const countDaysWithSleepLessThan6Hours = async (userId, range) => {
+    const days = getDaysFromRange(range)
+    const today = new Date()
+    today.setHours(23, 59, 59, 999)
+
+    const start = new Date()
+    start.setDate(today.getDate() - (days - 1))
+    start.setHours(0, 0, 0, 0)
+
+    const records = await sleepRecordsModel.findSleepRecords({
+        userId: typeof userId === 'string' ? new ObjectId(userId) : userId,
+        sleepTime: { $gte: start, $lte: today },
         duration: { $lte: 6 }
     })
+
+    return records.length
 }
 
 // Đếm số ngày ngủ nhiều hơn 8 tiếng
-const countDaysWithSleepMoreThan8Hours = async (userId) => {
-    return await sleepRecordsModel.findSleepRecords({
-        userId,
+const countDaysWithSleepMoreThan8Hours = async (userId, range) => {
+    const days = getDaysFromRange(range)
+    const today = new Date()
+    today.setHours(23, 59, 59, 999)
+
+    const start = new Date()
+    start.setDate(today.getDate() - (days - 1))
+    start.setHours(0, 0, 0, 0)
+
+    const records = await sleepRecordsModel.findSleepRecords({
+        userId: typeof userId === 'string' ? new ObjectId(userId) : userId,
+        sleepTime: {
+            $gte: start,
+            $lte: today
+        },
         duration: { $gte: 8 }
     })
+
+    return records.length
 }
-const getAverageSleepAndWakeTime = async (userId) => {
-    const records = await sleepRecordsModel.findSleepRecords({ userId })
+
+const getAverageSleepAndWakeTime = async (userId, range) => {
+    const days = getDaysFromRange(range)
+    const today = new Date()
+    today.setHours(23, 59, 59, 999)
+
+    const start = new Date()
+    start.setDate(today.getDate() - (days - 1))
+    start.setHours(0, 0, 0, 0)
+
+    const records = await sleepRecordsModel.findSleepRecords({
+        userId: typeof userId === 'string' ? new ObjectId(userId) : userId,
+        sleepTime: {
+            $gte: start,
+            $lte: today
+        }
+    })
 
     if (records.length === 0)
-        return { dateStart: null, dateEnd: null, averageSleepTime: null, averageWakeTime: null }
+        return {
+            averageSleepTime: null,
+            averageWakeTime: null
+        }
 
     let totalSleepHours = 0
     let totalWakeHours = 0
-
-    let minDate = new Date(records[0].date)
-    let maxDate = new Date(records[0].date)
 
     for (const record of records) {
         const sleepDate = new Date(record.sleepTime)
@@ -44,90 +93,56 @@ const getAverageSleepAndWakeTime = async (userId) => {
 
         totalSleepHours += sleepHour
         totalWakeHours += wakeHour
-
-        const currentDate = new Date(record.date)
-        if (currentDate < minDate) minDate = currentDate
-        if (currentDate > maxDate) maxDate = currentDate
     }
 
-    const avgSleepHour = parseFloat((totalSleepHours / records.length).toFixed(2))
+    const avgSleepHour = parseFloat(
+        (totalSleepHours / records.length).toFixed(2)
+    )
     const avgWakeHour = parseFloat((totalWakeHours / records.length).toFixed(2))
 
     return {
-        dateStart: minDate.toISOString().split('T')[0],
-        dateEnd: maxDate.toISOString().split('T')[0],
         averageSleepTime: avgSleepHour,
         averageWakeTime: avgWakeHour
     }
 }
 
-const getWeekInfo = (dateData) => {
-    const date = new Date(dateData)
-    date.setHours(0, 0, 0, 0)
+const getAverageSleepDurationByDays = async (userId, range) => {
+    const days = getDaysFromRange(range)
+    const today = new Date()
+    today.setHours(23, 59, 59, 999)
 
-    const day = date.getDay()
-    const diffToMonday = (day === 0 ? -6 : 1) - day
-    const startOfWeek = new Date(date)
-    startOfWeek.setDate(date.getDate() + diffToMonday)
+    const start = new Date()
+    start.setDate(today.getDate() - (days - 1))
+    start.setHours(0, 0, 0, 0)
 
-    const endOfWeek = new Date(startOfWeek)
-    endOfWeek.setDate(startOfWeek.getDate() + 6)
-
-    const firstDayOfYear = new Date(date.getFullYear(), 0, 1)
-    const daysDiff = Math.floor((startOfWeek - firstDayOfYear) / (1000 * 60 * 60 * 24))
-    const week = Math.ceil((daysDiff + 1) / 7)
-
-    return {
-        year: date.getFullYear(),
-        week,
-        startOfWeek: startOfWeek.toISOString().split('T')[0],
-        endOfWeek: endOfWeek.toISOString().split('T')[0]
-    }
-}
-const getWeeklyAverageSleep = async (userId) => {
-    const records = await sleepRecordsModel.findSleepRecords({ userId })
-
-    if (records.length === 0) return []
-
-    const weekMap = {}
-
-    for (const record of records) {
-        const weekInfo = getWeekInfo(record.date)
-
-        const duration = record.duration || calculateSleepDuration(record.sleepTime, record.wakeTime)
-
-        const key = `${weekInfo.year}-W${weekInfo.week}`
-
-        if (!weekMap[key]) {
-            weekMap[key] = {
-                weekStart: weekInfo.startOfWeek,
-                weekEnd: weekInfo.endOfWeek,
-                totalSleep: 0,
-                count: 0
-            }
+    const records = await sleepRecordsModel.findSleepRecords({
+        userId: typeof userId === 'string' ? new ObjectId(userId) : userId,
+        sleepTime: {
+            $gte: start,
+            $lte: today
         }
+    })
 
-        weekMap[key].totalSleep += duration
-        weekMap[key].count += 1
-    }
+    const validDurations = records
+        .map((r) => r.duration)
+        .filter((d) => typeof d === 'number' && !isNaN(d))
 
-    return Object.entries(weekMap).map(([weekKey, data]) => ({
-        week: weekKey,
-        weekStart: data.weekStart,
-        weekEnd: data.weekEnd,
-        averageSleepDuration: parseFloat((data.totalSleep / data.count).toFixed(2))
-    }))
+    if (validDurations.length === 0) return null
+
+    const total = validDurations.reduce((sum, d) => sum + d, 0)
+    const average = parseFloat((total / validDurations.length).toFixed(2))
+
+    return average
 }
 
 const createNew = async (data) => {
-    const { userId, sleepTime, wakeTime, date } = data
+    const { userId, sleepTime, wakeTime } = data
     const duration = calculateSleepDuration(sleepTime, wakeTime)
 
     const newRecord = {
         userId,
         sleepTime,
         wakeTime,
-        date,
         duration
     }
 
@@ -139,47 +154,44 @@ const getSleepRecordsByUserId = async (userId) => {
     return await sleepRecordsModel.findSleepRecordsByUserId(userId)
 }
 
-const getPastDate = (daysAgo) => {
-    const date = new Date()
-    date.setHours(0, 0, 0, 0)
-    return new Date(date.getTime() - daysAgo * 24 * 60 * 60 * 1000)
-}
-const getSleepRecordsByRange = async (userId, range, from, to) => {
+const getSleepRecordsByDays = async (userId, days) => {
     const today = new Date()
-    today.setHours(0, 0, 0, 0)
+    today.setHours(23, 59, 59, 999)
+
+    const getPastDate = (days) => {
+        const date = new Date()
+        date.setDate(date.getDate() - days)
+        date.setHours(0, 0, 0, 0)
+        return date
+    }
 
     const rangeConfig = {
         '7days': () => [getPastDate(7), today],
-        '30days': () => [getPastDate(30), today],
-        custom: () => {
-            if (!from || !to)
-                throw new Error('Missing from/to for custom range')
-            return [new Date(from), new Date(to)]
-        }
+        '30days': () => [getPastDate(30), today]
     }
 
-    if (!rangeConfig[range]) throw new Error('Invalid range type')
+    if (!rangeConfig[days]) throw new Error('Invalid range type')
 
-    let [startDate, endDate] = rangeConfig[range]()
-    startDate.setHours(0, 0, 0, 0)
-    endDate.setHours(23, 59, 59, 999)
+    const [startDate, endDate] = rangeConfig[days]()
 
-    const records = await sleepRecordsModel
-        .find({
-            userId,
-            date: { $gte: startDate, $lte: endDate }
-        })
-        .sort({ date: -1 })
+    const data = await sleepRecordsModel.findSleepRecords({
+        userId: typeof userId === 'string' ? new ObjectId(userId) : userId,
+        sleepTime: {
+            $gte: startDate,
+            $lte: endDate
+        }
+    })
 
-    return records
+    return data
 }
+
 export const sleepRecordsService = {
     createNew,
     calculateSleepDuration,
     getSleepRecordsByUserId,
-    getSleepRecordsByRange,
+    getSleepRecordsByDays,
     countDaysWithSleepLessThan6Hours,
     countDaysWithSleepMoreThan8Hours,
     getAverageSleepAndWakeTime,
-    getWeeklyAverageSleep
+    getAverageSleepDurationByDays
 }

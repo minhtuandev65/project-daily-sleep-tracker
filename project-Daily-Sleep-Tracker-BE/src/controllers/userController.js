@@ -21,7 +21,6 @@ const authenticate = async (req, res, next) => {
     try {
         const authenticated = await userService.authenticate(req.body)
 
-
         res.cookie('accessToken', authenticated.accessToken, {
             httpOnly: true,
             secure: true,
@@ -44,7 +43,6 @@ const authenticate = async (req, res, next) => {
 }
 const logout = async (req, res, next) => {
     try {
-
         res.clearCookie('accessToken')
         res.clearCookie('refreshToken')
 
@@ -66,7 +64,12 @@ const refreshToken = async (req, res, next) => {
         })
         res.status(StatusCodes.OK).json(result)
     } catch (error) {
-        next(new ApiError(StatusCodes.FORBIDDEN, 'Please Sign In!, (Error from refresh token)'))
+        next(
+            new ApiError(
+                StatusCodes.FORBIDDEN,
+                'Please Sign In!, (Error from refresh token)'
+            )
+        )
     }
 }
 
@@ -74,17 +77,19 @@ const verifyAccount = async (req, res, next) => {
     try {
         const result = await userService.verifyAccount(req.body)
         res.status(StatusCodes.OK).json(result)
-    } catch (error) { next(error) }
+    } catch (error) {
+        next(error)
+    }
 }
-
 
 const forgotPassword = async (req, res, next) => {
     try {
-
         if (!req.body.email) {
             throw new ApiError(StatusCodes.BAD_REQUEST, 'email is required')
         }
-        const result = await userService.forgotPassword({ email: req.body.email })
+        const result = await userService.forgotPassword({
+            email: req.body.email
+        })
 
         res.status(StatusCodes.OK).json({
             message: 'Check your mail box to reset your password',
@@ -95,26 +100,48 @@ const forgotPassword = async (req, res, next) => {
     }
 }
 
-
 const resetPassword = async (req, res, next) => {
     try {
-
         if (!req.query.token) {
             throw new ApiError(StatusCodes.BAD_REQUEST, 'token is required')
         }
 
         if (!req.body.password || req.body.password?.length < 7) {
-            throw new ApiError(StatusCodes.BAD_REQUEST, 'Password is required, must be at least 7 characters')
+            throw new ApiError(
+                StatusCodes.BAD_REQUEST,
+                'Password is required, must be at least 7 characters'
+            )
         }
 
-        const result = await userService.resetPassword({ newPassword: req.body.password, token: req.query.token })
+        const result = await userService.resetPassword({
+            newPassword: req.body.password,
+            token: req.query.token
+        })
 
         res.status(StatusCodes.OK).json(result)
     } catch (error) {
         next(error)
     }
 }
+const getMyProfile = async (req, res, next) => {
+    try {
+        let userId = req.payload._id
 
+        const result = await userService.getMyProfile(userId)
+        res.status(StatusCodes.OK).json(result)
+    } catch (error) {
+        next(error)
+    }
+}
+const checkRole = async (req, res, next) => {
+    try {
+        const payload = await userService.checkRole(req.body)
+        // payload = { email, role: ['USER'] } (mảng hoặc chuỗi tuỳ bạn thiết kế)
+        res.status(StatusCodes.OK).json(payload)
+    } catch (err) {
+        next(err)
+    }
+}
 export const userController = {
     createNew,
     authenticate,
@@ -122,5 +149,7 @@ export const userController = {
     refreshToken,
     verifyAccount,
     forgotPassword,
-    resetPassword
+    resetPassword,
+    getMyProfile,
+    checkRole
 }

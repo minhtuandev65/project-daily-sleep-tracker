@@ -264,7 +264,7 @@ const forgotPassword = async (reqBody) => {
             env.FORGOT_PASSWORD_TOKEN_LIFE
         )
 
-        const confirmationLink = `${WEBSITE_DOMAIN}/account/forgot_password?token=${token}`
+        const confirmationLink = `${WEBSITE_DOMAIN}/account/resetPassword?token=${token}`
 
         await userModel.update(existUser._id, {
             resetPasswordToken: token,
@@ -418,7 +418,7 @@ const resetPassword = async (reqBody) => {
                     <p style="color:#555; font-size:16px;">We’re just letting you know that your password was successfully reset. If this was you, there’s nothing more to do.</p>
                     <p style="color:#555; font-size:16px;">If you did not perform this action, please contact our support immediately to secure your account.</p>
                     <p style="margin-top: 30px;">
-                      <a href="${WEBSITE_DOMAIN}/login/buyer" style="background-color:#000000; color:#ffffff; padding:12px 24px; text-decoration:none; border-radius:5px; font-weight:bold;">Log In</a>
+                      <a href="${WEBSITE_DOMAIN}/login" style="background-color:#000000; color:#ffffff; padding:12px 24px; text-decoration:none; border-radius:5px; font-weight:bold;">Log In</a>
                     </p>
                     <p style="color:#888; font-size:14px;">Thanks,<br/>The Daily Sleep Tracker Team</p>
                   </td>
@@ -454,7 +454,37 @@ const resetPassword = async (reqBody) => {
         throw Error(error)
     }
 }
+const getMyProfile = async (userId) => {
+    try {
+        const user = await userModel.getMyProfile(userId)
 
+        return user
+    } catch (error) {
+        throw Error(error)
+    }
+}
+const checkRole = async ({ email, password }) => {
+    const existUser = await userModel.findByEmail(email)
+    if (!existUser) {
+        throw new ApiError(StatusCodes.NOT_FOUND, 'Account not found!')
+    }
+    if (!existUser.isActive) {
+        throw new ApiError(
+            StatusCodes.NOT_ACCEPTABLE,
+            'Your account is not active!'
+        )
+    }
+    // So sánh mật khẩu
+    const ok = bcrypt.compareSync(password, existUser.password)
+    if (!ok) {
+        throw new ApiError(
+            StatusCodes.UNAUTHORIZED,
+            'Email or password is incorrect!'
+        )
+    }
+    // Chỉ trả về role (và email để frontend dễ quản lý)
+    return { email: existUser.email, role: existUser.role }
+}
 export const userService = {
     createNew,
     authenticate,
@@ -462,5 +492,7 @@ export const userService = {
     verifyAccount,
     activateUser,
     forgotPassword,
-    resetPassword
+    resetPassword,
+    getMyProfile,
+    checkRole
 }

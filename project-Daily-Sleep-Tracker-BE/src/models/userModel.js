@@ -9,34 +9,40 @@ import { EMAIL_RULE, EMAIL_RULE_MESSAGE } from '~/validations/validators'
 import { ObjectId } from 'mongodb'
 import { ROLE } from '~/utils/constants'
 
-
 export const USER_COLLECTION_NAME = 'users'
 const USER_COLLECTION_SCHEMA = Joi.object({
-    email: Joi.string().required().pattern(EMAIL_RULE).message(EMAIL_RULE_MESSAGE), // unique
+    email: Joi.string()
+        .required()
+        .pattern(EMAIL_RULE)
+        .message(EMAIL_RULE_MESSAGE), // unique
     password: Joi.string().required(),
     // username cắt ra từ email sẽ có khả năng không unique bởi vì sẽ có những tên email trùng nhau nhưng từ các nhà cung cấp khác nhau
     username: Joi.string().required().trim().strict(),
     displayName: Joi.string().required().trim().strict(),
-    role: Joi.array().items(Joi.string().valid(...Object.values(ROLE))).default([ROLE.BUYER]),
+    role: Joi.array()
+        .items(Joi.string().valid(...Object.values(ROLE)))
+        .default([ROLE.BUYER]),
     isActive: Joi.boolean().default(false),
     verifyToken: Joi.string(),
     createdAt: Joi.date().timestamp('javascript').default(Date.now),
     updatedAt: Joi.date().timestamp('javascript').default(null),
     latestActiveAt: Joi.date().timestamp('javascript').default(null),
     _destroy: Joi.boolean().default(false)
-
 })
 const INVALID_UPDATE_FIELDS = ['_id', 'email', 'username', 'createdAt']
 
 const validateBeforeCreate = async (data) => {
-    return await USER_COLLECTION_SCHEMA.validateAsync(data, { abortEarly: false })
+    return await USER_COLLECTION_SCHEMA.validateAsync(data, {
+        abortEarly: false
+    })
 }
-
 
 const createNew = async (data) => {
     try {
         const validData = await validateBeforeCreate(data)
-        const createUser = await GET_DB().collection(USER_COLLECTION_NAME).insertOne(validData)
+        const createUser = await GET_DB()
+            .collection(USER_COLLECTION_NAME)
+            .insertOne(validData)
         return createUser
     } catch (error) {
         throw new Error(error)
@@ -44,9 +50,10 @@ const createNew = async (data) => {
 }
 
 const findByEmail = async (emailValue) => {
-
     try {
-        const exist = await GET_DB().collection(USER_COLLECTION_NAME).findOne({ email: emailValue })
+        const exist = await GET_DB()
+            .collection(USER_COLLECTION_NAME)
+            .findOne({ email: emailValue })
 
         return exist
     } catch (error) {
@@ -54,10 +61,10 @@ const findByEmail = async (emailValue) => {
     }
 }
 const findById = async (id) => {
-
     try {
-
-        const user = await GET_DB().collection(USER_COLLECTION_NAME).findOne({ _id: new ObjectId(id) }, { projection: { password: 0 } })
+        const user = await GET_DB()
+            .collection(USER_COLLECTION_NAME)
+            .findOne({ _id: new ObjectId(id) }, { projection: { password: 0 } })
 
         return user
     } catch (error) {
@@ -66,34 +73,67 @@ const findById = async (id) => {
 }
 const pushNewRole = async (userId, role) => {
     try {
-        return await GET_DB().collection(USER_COLLECTION_NAME).updateOne(
+        return await GET_DB()
+            .collection(USER_COLLECTION_NAME)
+            .updateOne(
+                {
+                    _id: new ObjectId(userId)
+                },
+                {
+                    $addToSet: {
+                        role: role
+                    }
+                }
+            )
+    } catch (error) {
+        throw new Error(error)
+    }
+}
+const getMyProfile = async (id) => {
+    try {
+        const pipeline = [
             {
-                _id: new ObjectId(userId)
+                $match: {
+                    _id: new ObjectId(id)
+                }
             },
             {
-                $addToSet: {
-                    role: role
+                $unwind: {
+                    path: '$organization',
+                    preserveNullAndEmptyArrays: true
                 }
-            })
+            },
+            {
+                $project: {
+                    password: 0
+                }
+            }
+        ]
+        const user = await GET_DB()
+            .collection(USER_COLLECTION_NAME)
+            .aggregate(pipeline)
+            .toArray()
 
+        return user
     } catch (error) {
         throw new Error(error)
     }
 }
 
 const update = async (userId, updatedData) => {
-
     try {
-        Object.keys(updatedData).forEach(fieldName => {
+        Object.keys(updatedData).forEach((fieldName) => {
             if (INVALID_UPDATE_FIELDS.includes(fieldName)) {
                 delete updatedData[fieldName]
             }
         })
-        const result = await GET_DB().collection(USER_COLLECTION_NAME).findOneAndUpdate(
-            { _id: new ObjectId(userId) },
-            { $set: { ...updatedData, updatedAt: new Date() } },
-            { returnDocument: 'after' }
-        )
+        const result = await GET_DB()
+            .collection(USER_COLLECTION_NAME)
+            .findOneAndUpdate(
+                { _id: new ObjectId(userId) },
+                { $set: { ...updatedData, updatedAt: new Date() } },
+                { returnDocument: 'after' }
+            )
 
         return result
     } catch (error) {
@@ -102,17 +142,17 @@ const update = async (userId, updatedData) => {
 }
 
 const updateLatestActive = async (userId) => {
-
     try {
-
-        const result = await GET_DB().collection(USER_COLLECTION_NAME).findOneAndUpdate(
-            { _id: new ObjectId(userId) },
-            {
-                $set: {
-                    latestActiveAt: new Date()
+        const result = await GET_DB()
+            .collection(USER_COLLECTION_NAME)
+            .findOneAndUpdate(
+                { _id: new ObjectId(userId) },
+                {
+                    $set: {
+                        latestActiveAt: new Date()
+                    }
                 }
-            }
-        )
+            )
 
         return result
     } catch (error) {
@@ -120,12 +160,12 @@ const updateLatestActive = async (userId) => {
     }
 }
 
-
 export const userModel = {
     findByEmail,
     createNew,
     update,
     findById,
     pushNewRole,
-    updateLatestActive
+    updateLatestActive,
+    getMyProfile
 }

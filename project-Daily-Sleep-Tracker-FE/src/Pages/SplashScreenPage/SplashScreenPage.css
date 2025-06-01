@@ -1,0 +1,61 @@
+.title {
+  font-size: 2rem;
+  color: #333;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.page-container {
+  padding: 50px 150px;
+  background: #fff;
+  min-height: 100vh;
+}
+.text {
+  font-size: 20px;
+}
+@media screen and (max-width: 768px) {
+  .page-container {
+    padding: 30px 20px !important;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .feature-text {
+    font-size: 16px !important;
+  }
+
+  .paragraph-text {
+    font-size: 16px !important;
+  }
+
+  .entry-section {
+    width: 100% !important;
+  }
+  .text {
+    font-size: 17px !important;
+  }
+}
+@media screen and (max-width: 480px) {
+  .page-container {
+    padding: 20px 10px !important;
+  }
+  .title {
+    font-size: 20px !important;
+  }
+
+  .feature-text {
+    font-size: 12px !important;
+  }
+
+  .paragraph-text {
+    font-size: 12px !important;
+  }
+  .text {
+    font-size: 13px !important;
+  }
+  .entry-section {
+    width: 100% !important;
+  }
+}

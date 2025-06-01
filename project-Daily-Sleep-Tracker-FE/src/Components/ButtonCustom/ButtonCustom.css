@@ -1,0 +1,51 @@
+/* buttonCustom.css */
+/* Hover hiệu ứng cho button */
+.btnCustom {
+  transition: all 0.3s ease;
+  font-weight: 800 !important;
+  border: 2px solid #ffffff !important;
+  background: #bcbabe !important;
+  color: #ffffff !important;
+  border-radius: 10px !important;
+  height: 50px !important;
+  width: 100% !important;
+  font-size: 16 !important;
+}
+
+/* Hover override */
+.btnCustom:hover {
+  border: 1px solid #000 !important;
+  background: rgb(255, 255, 255) !important;
+  color: black !important;
+}
+.active {
+  background: #ffffff !important;
+  color: #000000 !important;
+  border-color: #000000 !important;
+  font-weight: 800 !important;
+}
+
+/* Responsive header */
+@media screen and (max-width: 1024px) {
+  .btnCustom {
+    font-size: 14px !important;
+    height: 44px !important;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .btnCustom {
+    font-size: 12px !important;
+    height: 40px !important;
+    border-radius: 10px !important;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .btnCustom {
+    font-size: 11px !important;
+    height: 36px !important;
+    border-radius: 10px !important;
+    padding: 0 8px !important;
+  }
+}

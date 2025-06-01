@@ -17,9 +17,6 @@ const SLEEPRECORDS_COLLECTION_SCHEMA = Joi.object({
         .greater(Joi.ref('sleepTime'))
         .required()
         .label('Thời gian thức dậy'),
-
-    dateSleep: Joi.date().required().label('Ngày ghi nhận (ngày bắt đầu ngủ)'),
-    dateWake: Joi.date().required().label('Ngày ghi nhận (ngày thức dậy)'),
     duration: Joi.number()
         .positive()
         .precision(2)
@@ -61,9 +58,11 @@ const findSleepRecordsByUserId = async (userId) => {
 }
 const findSleepRecords = async (filter) => {
     try {
-        if (filter.userId) {
+        if (filter.userId && typeof filter.userId === 'string') {
             filter.userId = new ObjectId(filter.userId)
         }
+
+        console.log('Filter:', filter)
         const result = await GET_DB()
             .collection(SLEEPRECORDS_COLLECTION_NAME)
             .find(filter)
