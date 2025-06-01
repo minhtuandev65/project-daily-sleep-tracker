@@ -4,9 +4,9 @@ if (process.env.BUILD_MODE === "dev") {
   apiRoot = "http://localhost:1303/v1";
 }
 
-// if (process.env.BUILD_MODE === "production") {
-//   apiRoot = "https://project-ticketbox-api.onrender.com/v1";
-// }
+if (process.env.BUILD_MODE === "production") {
+  apiRoot = "https://project-daily-sleep-tracker-be.onrender.com/v1";
+}
 
 export const DOMAIN = apiRoot;
 export const USER_LOGIN = "USER_LOGIN";
