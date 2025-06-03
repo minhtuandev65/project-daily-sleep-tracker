@@ -1,0 +1,10 @@
+.recharts-area-area {
+  opacity: 1 !important;
+  display: block !important;
+}
+
+@media screen and (max-width: 600px) {
+  .recharts-layer {
+    font-size: 10px;
+  }
+}

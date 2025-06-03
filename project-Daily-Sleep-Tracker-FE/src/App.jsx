@@ -17,11 +17,12 @@ import LoginPage from "./Pages/LoginPage/LoginPage";
 import SplashScreenTeamplate from "./Templates/SplashScreenTemplate/SplashScreenTemplate";
 import SplashScreenPage from "./Pages/SplashScreenPage/SplashScreenPage";
 import RegisterPage from "./Pages/RegisterPage/RegisterPage";
-import ForgotPassword from "./Components/ForgotPassword/ForgotPassword";
-import ResetYourPassword from "./Components/ResetYourPassword/ResetYourPassword";
+import ForgotPassword from "./Pages/ForgotPassword/ForgotPassword";
+import ResetYourPassword from "./Pages/ResetYourPassword/ResetYourPassword";
 import HomeTemplate from "./Templates/HomeTemplate/HomeTemplate";
 import HomePageUser from "./Pages/UsersPages/Home/HomePage";
-import AccountVerification from "./Components/VerifyEmail/AccountVerification";
+import AccountVerification from "./Pages/VerifyEmail/AccountVerification";
+import NotFoundRedirect from "./Components/NotFoundRedirect/NotFoundRedirect";
 function AppEffects() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -54,6 +55,8 @@ function App() {
           <Route path="/home" element={<HomeTemplate />}>
             <Route index element={<HomePageUser />} />
           </Route>
+          {/* Điều hướng không đúng path */}
+          <Route path="*" element={<NotFoundRedirect />} />
         </Routes>
       </BrowserRouter>
     </Provider>

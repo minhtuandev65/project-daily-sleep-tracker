@@ -1,23 +1,15 @@
 import React from "react";
-
-import SplashScreenFooter from "./SplashScreenFooter/SplashScreenFooter";
 import { Outlet } from "react-router-dom";
 import SplashScreenHeader from "./SplashScreenHeader/SplashScreenHeader";
+import FooterTemplate from "../Footer/Footer";
 function SplashScreenTeamplate() {
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        minHeight: "100vh",
-        width: "100%",
-      }}
-    >
+    <div className="flex flex-col min-h-screen w-full">
       <SplashScreenHeader />
       <div style={{ flex: 1 }}>
         <Outlet />
       </div>
-      <SplashScreenFooter />
+      <FooterTemplate />
     </div>
   );
 }

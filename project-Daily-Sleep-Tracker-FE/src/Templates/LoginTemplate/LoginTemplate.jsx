@@ -1,23 +1,15 @@
 import React from "react";
 import HeaderLogin from "./HeaderLogin/HeaderLogin";
-import FooterLogin from "./FooterLogin/FooterLogin";
 import { Outlet } from "react-router-dom";
+import FooterTemplate from "../Footer/Footer";
 function LoginTemplate() {
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        minHeight: "100vh", 
-        background: "linear-gradient(to right, #eafbf2, #d2f4e1)",
-        width: "100%",
-      }}
-    >
+    <div className="flex flex-col min-h-screen w-full">
       <HeaderLogin />
       <div style={{ flex: 1 }}>
         <Outlet />
       </div>
-      <FooterLogin />
+      <FooterTemplate />
     </div>
   );
 }

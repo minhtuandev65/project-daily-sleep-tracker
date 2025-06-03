@@ -3,8 +3,6 @@ import { Input, Button, Typography } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useFormik } from "formik";
-
-import styles from "./RegisterPage.module.css";
 import ButtonCustom from "../../Components/ButtonCustom/ButtonCustom";
 import { registerAction } from "../../Redux/Actions/AuthAction/AuthAction";
 
@@ -32,9 +30,9 @@ export default function RegisterPage() {
       return errors;
     },
     onSubmit: async (values) => {
-      const { xacNhanMatKhau, ...registerProfile } = values;
+      const { xacNhanMatKhau, ...registerData } = values;
       try {
-        await dispatch(registerAction(registerProfile));
+        await dispatch(registerAction(registerData));
         navigate("/login");
       } catch (error) {
         // đã xử lý lỗi ở trong action bằng message.error rồi
@@ -43,58 +41,37 @@ export default function RegisterPage() {
   });
 
   return (
-    <div
-      style={{
-        width: "100vw",
-        height: "100vh",
-        background: "linear-gradient(to right, #a1d6e2,rgb(132, 154, 158))",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        padding: 20,
-      }}
-    >
+    <div className="w-screen h-screen bg-gradient-to-r from-[#a1d6e2] to-[#849a9e] flex justify-center items-center">
       <form
         onSubmit={formik.handleSubmit}
         autoComplete="off"
-        style={{
-          background: "#ffffff",
-          width: "100%",
-          maxWidth: 420,
-          padding: "40px 32px",
-          borderRadius: 16,
-          boxShadow: "0 12px 28px rgba(0, 0, 0, 0.1)",
-        }}
+        className="bg-white w-full max-w-[420px] max-[376px]:max-w-[350px] p-8 md:p-10 rounded-[10px] shadow-xl"
         noValidate
       >
-        <Typography.Title level={3} style={{ textAlign: "center" }}>
+        <Typography.Title
+          level={3}
+          className="text-center mb-8 text-[22px] md:text-[24px]"
+        >
           Đăng ký người dùng
         </Typography.Title>
 
         {/* displayName */}
-        <Input
-          name="displayName"
-          placeholder="Tên tài khoản"
-          autoComplete="displayName"
-          value={formik.values.displayName}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          status={
-            formik.touched.displayName && formik.errors.displayName
-              ? "error"
-              : ""
-          }
-          style={{
-            height: "50px",
-            border: "1px solid #E7E7E7",
-            outline: "none",
-            width: "100%",
-            borderRadius: "10px",
-            padding: "0 20px",
-            marginBottom: 8,
-            background: "transparent",
-          }}
-        />
+        <div className="mb-6">
+          <Input
+            name="displayName"
+            placeholder="Tên tài khoản"
+            autoComplete="displayName"
+            value={formik.values.displayName}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            status={
+              formik.touched.displayName && formik.errors.displayName
+                ? "error"
+                : ""
+            }
+            className="h-[45px] md:h-[40px] lg:h-[48px] rounded-[10px] text-base md:text-lg px-3 border border-gray-300"
+          />
+        </div>
         {formik.touched.displayName && formik.errors.displayName && (
           <Typography.Text type="danger">
             {formik.errors.displayName}
@@ -102,27 +79,20 @@ export default function RegisterPage() {
         )}
 
         {/* PASSWORD */}
-        <Input.Password
-          name="password"
-          placeholder="Mật khẩu"
-          autoComplete="new-password"
-          value={formik.values.password}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          status={
-            formik.touched.password && formik.errors.password ? "error" : ""
-          }
-          style={{
-            height: "50px",
-            border: "1px solid #E7E7E7",
-            outline: "none",
-            width: "100%",
-            borderRadius: "10px",
-            padding: "0 20px",
-            marginBottom: 8,
-            background: "transparent",
-          }}
-        />
+        <div className="mb-6">
+          <Input.Password
+            name="password"
+            placeholder="Mật khẩu"
+            autoComplete="new-password"
+            value={formik.values.password}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            status={
+              formik.touched.password && formik.errors.password ? "error" : ""
+            }
+            className="h-[45px] md:h-[40px] lg:h-[48px] rounded-[10px] text-base md:text-lg px-3 border border-gray-300"
+          />
+        </div>
         {formik.touched.password && formik.errors.password && (
           <Typography.Text type="danger">
             {formik.errors.password}
@@ -130,29 +100,22 @@ export default function RegisterPage() {
         )}
 
         {/* XÁC NHẬN MẬT KHẨU */}
-        <Input.Password
-          name="xacNhanMatKhau"
-          placeholder="Xác nhận mật khẩu"
-          autoComplete="new-password"
-          value={formik.values.xacNhanMatKhau}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          status={
-            formik.touched.xacNhanMatKhau && formik.errors.xacNhanMatKhau
-              ? "error"
-              : ""
-          }
-          style={{
-            height: "50px",
-            border: "1px solid #E7E7E7",
-            outline: "none",
-            width: "100%",
-            borderRadius: "10px",
-            padding: "0 20px",
-            marginBottom: 8,
-            background: "transparent",
-          }}
-        />
+        <div className="mb-6">
+          <Input.Password
+            name="xacNhanMatKhau"
+            placeholder="Xác nhận mật khẩu"
+            autoComplete="new-password"
+            value={formik.values.xacNhanMatKhau}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            status={
+              formik.touched.xacNhanMatKhau && formik.errors.xacNhanMatKhau
+                ? "error"
+                : ""
+            }
+            className="h-[45px] md:h-[40px] lg:h-[48px] rounded-[10px] text-base md:text-lg px-3 border border-gray-300"
+          />{" "}
+        </div>
         {formik.touched.xacNhanMatKhau && formik.errors.xacNhanMatKhau && (
           <Typography.Text type="danger">
             {formik.errors.xacNhanMatKhau}
@@ -160,25 +123,19 @@ export default function RegisterPage() {
         )}
 
         {/* EMAIL */}
-        <Input
-          name="email"
-          placeholder="Email"
-          autoComplete="email"
-          value={formik.values.email}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          status={formik.touched.email && formik.errors.email ? "error" : ""}
-          style={{
-            height: "50px",
-            border: "1px solid #E7E7E7",
-            outline: "none",
-            width: "100%",
-            borderRadius: "10px",
-            padding: "0 20px",
-            marginBottom: 16,
-            background: "transparent",
-          }}
-        />
+        <div className="mb-6">
+          <Input
+            name="email"
+            placeholder="Email"
+            autoComplete="email"
+            value={formik.values.email}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            status={formik.touched.email && formik.errors.email ? "error" : ""}
+            className="h-[45px] md:h-[40px] lg:h-[48px] rounded-[10px] text-base md:text-lg px-3 border border-gray-300"
+          />
+        </div>
+
         {formik.touched.email && formik.errors.email && (
           <Typography.Text type="danger">{formik.errors.email}</Typography.Text>
         )}

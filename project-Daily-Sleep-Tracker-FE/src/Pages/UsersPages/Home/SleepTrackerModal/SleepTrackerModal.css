@@ -1,0 +1,27 @@
+/* Custom responsive cho DatePicker */
+@media screen and (max-width: 768px) {
+  .ant-picker-datetime-panel {
+    font-size: 16px !important;
+  }
+  .custom-datepicker {
+    max-width: 90vw !important;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .custom-datepicker {
+    max-width: 85vw !important;
+  }
+}
+
+@media screen and (max-width: 376px) {
+  .ant-picker-datetime-panel {
+    font-size: 12px !important;
+  }
+  .custom-datepicker {
+    max-width: 85vw !important;
+  }
+  .ant-picker-date-panel {
+    width: 200px !important;
+  }
+}

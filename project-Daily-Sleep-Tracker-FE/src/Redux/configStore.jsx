@@ -2,7 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { combineReducers } from "redux";
 import { LoadingReducer } from "./Reducer/LoadingReducer/LoadingReducer";
 import { AuthReducer } from "./Reducer/AuthReducer/AuthReducer";
-import { SleepRecordsReducer } from "./Reducer/UsersReducer/SleepRecordsReducer/SleepRecordsReducer";
+import { SleepTrackersReducer } from "./Reducer/UsersReducer/SleepTrackersReducer/SleepTrackersReducer";
 
 const rootReducer = combineReducers({
   // Loading reducer
@@ -10,7 +10,7 @@ const rootReducer = combineReducers({
   // Auth reducer
   AuthReducer,
   // User reducer
-  SleepRecordsReducer
+  SleepTrackersReducer
 });
 
 export const store = configureStore({

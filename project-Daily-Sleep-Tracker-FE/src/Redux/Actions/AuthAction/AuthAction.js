@@ -35,7 +35,7 @@ export const loginAction = (credentials, navigate) => {
 
       dispatch(hideLoadingAction);
     } catch (error) {
-      message.error("Đăng nhập thất bại: " + error.message);
+      message.error("Login failed: " + error.message);
       dispatch(hideLoadingAction);
     }
   };
@@ -50,7 +50,7 @@ export const logoutAction = () => {
       localStorage.removeItem("USER_LOGIN");
       dispatch(hideLoadingAction);
     } catch (error) {
-      message.error("Đăng xuất thất bại: " + error.message);
+      message.error("Logout failed: " + error.message);
       dispatch(hideLoadingAction);
     }
   };
@@ -63,12 +63,9 @@ export const registerAction = (registerData, navigate) => {
       await authServices.register(registerData);
       dispatch(hideLoadingAction);
       navigate("/login");
-      message.success(
-        "Đăng ký thành công, vui lòng kiểm tra địa chỉ email để xác thực tài khoản!"
-      );
     } catch (error) {
       message.success(
-        "Đăng ký thành công, vui lòng kiểm tra địa chỉ email để xác thực tài khoản!"
+        "Registration successful, please check your email to verify your account!"
       );
       dispatch(hideLoadingAction);
     }
@@ -88,7 +85,7 @@ export const getMyProfileAction = () => {
       });
       dispatch(hideLoadingAction);
     } catch (error) {
-      message.error("Lấy thông tin người dùng thất bại: " + error.message);
+      message.error("Get user information failed: " + error.message);
       dispatch(hideLoadingAction);
     }
   };
@@ -99,10 +96,10 @@ export const resetPasswordAction = (password, token) => {
     try {
       dispatch(displayLoadingAction);
       await authServices.resetPassword(password, token);
-      message.success("Đặt lại mật khẩu thành công!");
+      message.success("Password reset successful!");
       dispatch(hideLoadingAction);
     } catch (error) {
-      message.error("Đặt lại mật khẩu thất bại: " + error.message);
+      message.error("Password reset failed: " + error.message);
       dispatch(hideLoadingAction);
     }
   };

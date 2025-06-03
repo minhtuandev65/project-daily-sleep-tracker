@@ -31,38 +31,21 @@ export default function LoginPage() {
     formik;
 
   return (
-    <div
-      style={{
-        width: "100%",
-        height: "100vh",
-        background: "linear-gradient(to right, #a1d6e2,rgb(132, 154, 158))",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        // padding: 20,
-      }}
-    >
+    <div className="w-screen h-screen bg-gradient-to-r from-[#a1d6e2] to-[#849a9e] flex justify-center items-center">
       <form
         onSubmit={handleSubmit}
         autoComplete="off"
-        style={{
-          background: "#ffffff",
-          width: "100%",
-          maxWidth: 420,
-          padding: "40px 32px",
-          borderRadius: 16,
-          boxShadow: "0 12px 28px rgba(0, 0, 0, 0.1)",
-        }}
+        className="bg-white w-full max-w-[420px] max-[376px]:max-w-[320px] p-8 md:p-10 rounded-[10px] shadow-xl"
       >
         <Typography.Title
           level={3}
-          style={{ textAlign: "center", marginBottom: 32 }}
+          className="text-center mb-8 text-[22px] md:text-[24px]"
         >
           Đăng Nhập
         </Typography.Title>
 
         {/* Email */}
-        <div style={{ marginBottom: 24 }}>
+        <div className="mb-6">
           <Input
             name="email"
             placeholder="Email"
@@ -71,13 +54,7 @@ export default function LoginPage() {
             onChange={handleChange}
             onBlur={handleBlur}
             status={touched.email && errors.email ? "error" : ""}
-            style={{
-              height: 48,
-              borderRadius: 10,
-              fontSize: 16,
-              borderColor: "#ccc",
-              padding: "0 12px",
-            }}
+            className="h-[45px] md:h-[40px] lg:h-[48px] rounded-[10px] text-base md:text-lg px-3 border border-gray-300"
           />
           {touched.email && errors.email && (
             <Typography.Text type="danger">{errors.email}</Typography.Text>
@@ -85,7 +62,7 @@ export default function LoginPage() {
         </div>
 
         {/* Password */}
-        <div style={{ marginBottom: 32 }}>
+        <div className="mb-6">
           <Input.Password
             name="password"
             placeholder="Mật khẩu"
@@ -94,13 +71,7 @@ export default function LoginPage() {
             onChange={handleChange}
             onBlur={handleBlur}
             status={touched.password && errors.password ? "error" : ""}
-            style={{
-              height: 48,
-              borderRadius: 10,
-              fontSize: 16,
-              borderColor: "#ccc",
-              padding: "0 12px",
-            }}
+            className="h-[45px] md:h-[40px] lg:h-[48px] rounded-[10px] text-base md:text-lg px-3 border border-gray-300"
           />
           {touched.password && errors.password && (
             <Typography.Text type="danger">{errors.password}</Typography.Text>
