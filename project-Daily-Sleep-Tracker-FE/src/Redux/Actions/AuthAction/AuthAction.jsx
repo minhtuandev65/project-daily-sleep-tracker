@@ -1,6 +1,6 @@
 // dự án quản lý giấc ngủ
 import { message } from "antd";
-import { SET_LOGIN, SET_GET_MY_PROFILE } from "../../Type/AuthType/AuthType";
+import { SET_LOGIN, SET_GET_MY_PROFILE } from "../../type/AuthType/AuthType";
 import {
   displayLoadingAction,
   hideLoadingAction,
