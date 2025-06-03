@@ -1,4 +1,4 @@
-// src/services/BaseService.js
+// src/services/BaseService.jsx
 import apiClient from "./apiClient";
 
 export class BaseService {
