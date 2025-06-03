@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()
   ],
    build: {
-    outDir: 'public' // phải là dist hoặc giống như trong vercel.json
+    outDir: 'dist' // phải là dist hoặc giống như trong vercel.json
   },
   define: {
     'process.env': process.env
