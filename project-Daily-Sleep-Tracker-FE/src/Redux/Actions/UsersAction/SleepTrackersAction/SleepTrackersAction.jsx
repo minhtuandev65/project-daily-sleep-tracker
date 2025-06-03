@@ -6,7 +6,7 @@ import {
   SET_COUNT_DAYS_WITH_SLEEP_LESS_THAN_6_HOURS,
   SET_COUNT_DAYS_WITH_SLEEP_MORE_THAN_8_HOURS,
   SET_GET_WEEKLY_AVERAGE_SLEEP,
-} from "../../../type/UsersType/UsersType";
+} from "../../../type/UserType/sleepTrackersType/sleepTrackersType";
 import {
   displayLoadingAction,
   hideLoadingAction,
