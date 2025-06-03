@@ -5,6 +5,9 @@ import react from '@vitejs/plugin-react-swc'
 export default defineConfig({
   plugins: [react()
   ],
+   build: {
+    outDir: 'dist' // phải là dist hoặc giống như trong vercel.json
+  },
   define: {
     'process.env': process.env
   },
