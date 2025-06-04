@@ -6,6 +6,7 @@ import { StatusCodes } from 'http-status-codes'
 import ms from 'ms'
 import { userService } from '~/services/userService'
 import ApiError from '~/utils/ApiError'
+import { env } from '../../build/src/config/environment'
 
 const createNew = async (req, res, next) => {
     try {
@@ -20,17 +21,17 @@ const createNew = async (req, res, next) => {
 const authenticate = async (req, res, next) => {
     try {
         const authenticated = await userService.authenticate(req.body)
-
+        const isProduction = env.BUILD_MODE === 'production'
         res.cookie('accessToken', authenticated.accessToken, {
             httpOnly: true,
-            secure: true,
-            sameSite: 'none',
+            secure: isProduction, // bỏ secure khi dev local http
+            sameSite: isProduction ? 'none' : 'lax', // dev local không cần none
             maxAge: ms('14 days')
         })
         res.cookie('refreshToken', authenticated.refreshToken, {
             httpOnly: true,
-            secure: true,
-            sameSite: 'none',
+            secure: isProduction,
+            sameSite: isProduction ? 'none' : 'lax',
             maxAge: ms('14 days')
         })
 
