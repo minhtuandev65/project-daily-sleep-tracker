@@ -9,6 +9,5 @@
       }
     }
   ],
-  "routes": [{ "src": "/(.*)", "dest": "/" }],
-  "rootDirectory": "project-Daily-Sleep-Tracker-FE"
+  "routes": [{ "src": "/(.*)", "dest": "/" }]
 }
