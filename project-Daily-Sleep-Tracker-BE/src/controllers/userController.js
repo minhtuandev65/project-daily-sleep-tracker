@@ -6,7 +6,7 @@ import { StatusCodes } from 'http-status-codes'
 import ms from 'ms'
 import { userService } from '~/services/userService'
 import ApiError from '~/utils/ApiError'
-import { env } from '../../build/src/config/environment'
+import { env } from '~/config/environment'
 
 const createNew = async (req, res, next) => {
     try {
