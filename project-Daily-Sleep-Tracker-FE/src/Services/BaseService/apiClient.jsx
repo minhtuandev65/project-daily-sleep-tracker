@@ -12,7 +12,7 @@ const apiClient = axios.create({
 });
 
 apiClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem("ACCESS_TOKEN");
+  const token = localStorage.getItem("accessToken");
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -36,7 +36,7 @@ apiClient.interceptors.response.use(
         try {
           const { data } = await apiClient.get("api/users/refresh_token");
           const newToken = data.accessToken;
-          localStorage.setItem(TOKEN, newToken);
+          localStorage.setItem("accessToken", newToken);
 
           // Gắn token mới vào request cũ rồi gửi lại
           originalRequest.headers.Authorization = `Bearer ${newToken}`;

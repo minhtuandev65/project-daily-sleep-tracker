@@ -22,11 +22,8 @@ export const loginAction = (credentials, navigate) => {
         "USER_LOGIN",
         JSON.stringify({ email: credentials.email, role })
       );
-      localStorage.setItem("accessToken", JSON.stringify(userData.accessToken));
-      localStorage.setItem(
-        "refreshToken",
-        JSON.stringify(userData.refreshToken)
-      );
+      localStorage.setItem("accessToken", userData.accessToken);
+      localStorage.setItem("refreshToken", userData.refreshToken);
 
       dispatch({
         type: SET_LOGIN,
@@ -54,6 +51,8 @@ export const logoutAction = () => {
       await authServices.logout();
       // Xóa thông tin người dùng khỏi localStorage
       localStorage.removeItem("USER_LOGIN");
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
       dispatch(hideLoadingAction);
     } catch (error) {
       message.error("Logout failed: " + error.message);
