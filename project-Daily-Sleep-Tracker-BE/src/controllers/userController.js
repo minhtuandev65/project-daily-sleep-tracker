@@ -35,9 +35,9 @@ const authenticate = async (req, res, next) => {
             maxAge: ms('14 days')
         })
 
-        delete authenticated.accessToken
-        delete authenticated.refreshToken
-        console.log('accessToken in request.cookies:', req.cookies.accessToken)
+        // delete authenticated.accessToken
+        // delete authenticated.refreshToken
+        // console.log('accessToken in request.cookies:', req.cookies.accessToken)
 
         res.status(StatusCodes.OK).json(authenticated)
     } catch (error) {

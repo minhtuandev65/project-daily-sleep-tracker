@@ -98,12 +98,6 @@ const getMyProfile = async (id) => {
                 }
             },
             {
-                $unwind: {
-                    path: '$organization',
-                    preserveNullAndEmptyArrays: true
-                }
-            },
-            {
                 $project: {
                     password: 0
                 }

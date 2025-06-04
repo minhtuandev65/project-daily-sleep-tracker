@@ -22,6 +22,12 @@ export const loginAction = (credentials, navigate) => {
         "USER_LOGIN",
         JSON.stringify({ email: credentials.email, role })
       );
+      localStorage.setItem("accessToken", JSON.stringify(userData.accessToken));
+      localStorage.setItem(
+        "refreshToken",
+        JSON.stringify(userData.refreshToken)
+      );
+
       dispatch({
         type: SET_LOGIN,
         payload: userData,
