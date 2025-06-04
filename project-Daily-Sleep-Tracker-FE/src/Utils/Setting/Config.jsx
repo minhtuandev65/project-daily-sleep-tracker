@@ -10,5 +10,5 @@ if (process.env.BUILD_MODE === "production") {
 
 export const DOMAIN = apiRoot;
 export const USER_LOGIN = "USER_LOGIN";
-export const TOKEN = "ACCESS_TOKEN";
-export const REFRESH_TOKEN = "REFRESH_TOKEN";
+export const TOKEN = "accessToken";
+export const REFRESH_TOKEN = "refreshToken";
