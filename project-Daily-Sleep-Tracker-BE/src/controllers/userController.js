@@ -25,18 +25,20 @@ const authenticate = async (req, res, next) => {
         res.cookie('accessToken', authenticated.accessToken, {
             httpOnly: true,
             secure: isProduction, // bỏ secure khi dev local http
-            sameSite: isProduction ? 'none' : 'lax', // dev local không cần none
+            sameSite: isProduction ? 'None' : 'lax', // dev local không cần none
             maxAge: ms('14 days')
         })
         res.cookie('refreshToken', authenticated.refreshToken, {
             httpOnly: true,
             secure: isProduction,
-            sameSite: isProduction ? 'none' : 'lax',
+            sameSite: isProduction ? 'None' : 'lax',
             maxAge: ms('14 days')
         })
 
         delete authenticated.accessToken
         delete authenticated.refreshToken
+        console.log('accessToken in request.cookies:', req.cookies.accessToken)
+
         res.status(StatusCodes.OK).json(authenticated)
     } catch (error) {
         next(error)
