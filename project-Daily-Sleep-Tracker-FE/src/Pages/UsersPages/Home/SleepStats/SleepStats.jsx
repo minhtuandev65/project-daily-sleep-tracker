@@ -2,16 +2,16 @@ import React, { useState } from "react";
 import ButtonCustom from "../../../../Components/ButtonCustom/ButtonCustom";
 import ModelEntry from "../SleepTrackerModal/SleepTrackerModal";
 import dayjs from "dayjs";
-import { formatDate, formatTime } from "../../../../Utils/formatDate/formatDate";
+import {
+  formatDate,
+  formatTime,
+} from "../../../../Utils/formatDate/formatDate";
 function SleepStats({ days, data }) {
-
-
   const [openModal, setOpenModal] = useState(false);
   const [selectedTracker, setSelectedTracker] = useState(null);
 
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 7;
-
 
   const handleOpenEdit = (tracker) => {
     setSelectedTracker(tracker);
@@ -28,7 +28,7 @@ function SleepStats({ days, data }) {
   if (trackerList.length === 0) {
     return (
       <div className="text-center py-6 text-gray-500 text-base">
-        No data sleep tracker...
+        No data sleep trackers...
       </div>
     );
   }
