@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Navigate, useSearchParams } from "react-router-dom";
-import { message } from "antd";
-
 import PageLoadingSpinner from "../../Components/Loading/PageLoadingSpinner";
-import { authServices } from "../../Services/Auth/AuthServices";
+import { verifyAcountAction } from "../../Redux/Actions/AuthAction/AuthAction";
 function AccountVerification() {
   const [searchParams] = useSearchParams();
   const { email, token } = Object.fromEntries([...searchParams]);
@@ -19,19 +17,12 @@ function AccountVerification() {
       return;
     }
 
-    const verify = async () => {
+    const verify = async (dispatch) => {
       try {
-        await authServices.verifyEmail({
-          email,
-          token,
-        });
-        
-        message.success("Xác thực thành công! Đang chuyển hướng...");
+        await dispatch(verifyAcountAction(email, token));
         setVerified(true);
       } catch (err) {
-        console.error("❌ Lỗi xác thực:", err.response?.data || err.message);
-        message.error("Xác thực tài khoản không thành công!");
-        setError(true);
+        // đã xử lý lỗi ở action
       } finally {
         setVerifying(false);
       }

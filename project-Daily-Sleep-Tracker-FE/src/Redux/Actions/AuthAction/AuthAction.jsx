@@ -1,11 +1,11 @@
 // dự án quản lý giấc ngủ
-import { message } from "antd";
 import { SET_LOGIN, SET_GET_MY_PROFILE } from "../../type/AuthType/AuthType";
 import {
   displayLoadingAction,
   hideLoadingAction,
 } from "../LoadingAction/LoadingAction";
 import { authServices } from "../../../Services/Auth/AuthServices";
+import { notificationFunction } from "../../../Utils/libs/Notification";
 
 // Tạo action để đăng nhập
 export const loginAction = (credentials, navigate) => {
@@ -32,13 +32,23 @@ export const loginAction = (credentials, navigate) => {
       // Bước 4: Kiểm tra role và điều hướng đến trang phù hợp
       if (role.includes("ADMIN")) {
         navigate("/admin");
+        notificationFunction(
+          "success",
+          `Hello ${credentials.email}`,
+          "Successfully login"
+        );
       } else {
         navigate("/home");
+        notificationFunction(
+          "success",
+          `Hello ${credentials.email}`,
+          "Successfully login"
+        );
       }
 
       dispatch(hideLoadingAction);
     } catch (error) {
-      message.error("Login failed: " + error.message);
+      notificationFunction("error", "Login failed: ", "Error");
       dispatch(hideLoadingAction);
     }
   };
@@ -55,7 +65,7 @@ export const logoutAction = () => {
       localStorage.removeItem("refreshToken");
       dispatch(hideLoadingAction);
     } catch (error) {
-      message.error("Logout failed: " + error.message);
+      notificationFunction("error", "Logout failed: ", "Error");
       dispatch(hideLoadingAction);
     }
   };
@@ -69,8 +79,10 @@ export const registerAction = (registerData, navigate) => {
       dispatch(hideLoadingAction);
       navigate("/login");
     } catch (error) {
-      message.success(
-        "Registration successful, please check your email to verify your account!"
+      notificationFunction(
+        "success",
+        "Registration successful, please check your email to verify your account!",
+        "Success"
       );
       dispatch(hideLoadingAction);
     }
@@ -90,7 +102,7 @@ export const getMyProfileAction = () => {
       });
       dispatch(hideLoadingAction);
     } catch (error) {
-      message.error("Get user information failed: " + error.message);
+      notificationFunction("error", "Get user information failed!", "Error");
       dispatch(hideLoadingAction);
     }
   };
@@ -101,10 +113,46 @@ export const resetPasswordAction = (password, token) => {
     try {
       dispatch(displayLoadingAction);
       await authServices.resetPassword(password, token);
-      message.success("Password reset successful!");
+      notificationFunction("success", "Password reset successful!", "Success");
       dispatch(hideLoadingAction);
     } catch (error) {
-      message.error("Password reset failed: " + error.message);
+      notificationFunction("error", "Password reset failed!", "Error");
+      dispatch(hideLoadingAction);
+    }
+  };
+};
+
+export const forgotPasswordAction = (emailData) => {
+  return async (dispatch) => {
+    try {
+      dispatch(displayLoadingAction);
+      await authServices.forgotPassword(emailData);
+      notificationFunction("success", "Please check your email.", "Success");
+      dispatch(hideLoadingAction);
+    } catch (error) {
+      notificationFunction("error", "Forgot password failed", "Error");
+      dispatch(hideLoadingAction);
+    }
+  };
+};
+
+export const verifyAcountAction = (emailData, token) => {
+  return async (dispatch) => {
+    try {
+      dispatch(displayLoadingAction);
+      await authServices.verifyEmail({
+        emailData,
+        token,
+      });
+
+      notificationFunction(
+        "success",
+        "Authentication successful! Redirecting...",
+        "Success"
+      );
+      dispatch(hideLoadingAction);
+    } catch (error) {
+      notificationFunction("error", "Account verification failed!", "Error");
       dispatch(hideLoadingAction);
     }
   };

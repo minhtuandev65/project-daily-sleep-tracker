@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Modal, DatePicker, Button, message } from "antd";
+import { Modal, DatePicker, Button } from "antd";
 import dayjs from "dayjs";
 import { useDispatch } from "react-redux";
 import {
@@ -8,6 +8,7 @@ import {
 } from "../../../../Redux/Actions/UsersAction/SleepTrackersAction/SleepTrackersAction";
 import "./SleepTrackerModal.css";
 import ButtonCustom from "../../../../Components/ButtonCustom/ButtonCustom";
+import { notificationFunction } from "../../../../Utils/libs/Notification";
 function SleepTrackerModal({ visible, onClose, trackerId, initialValues }) {
   const dispatch = useDispatch();
   const [sleepTime, setSleepTime] = useState(null);
@@ -21,13 +22,23 @@ function SleepTrackerModal({ visible, onClose, trackerId, initialValues }) {
 
   const handleSubmit = () => {
     if (!sleepTime || !wakeTime) {
-      return message.error("Please enter full sleep time and wake-up time.");
+      notificationFunction(
+        "error",
+        "Please enter full sleep time and wake-up time.",
+        "Error"
+      );
+      return;
     }
 
     const sleep = dayjs(sleepTime);
     const wake = dayjs(wakeTime);
     if (sleep.isAfter(wake) || sleep.isSame(wake)) {
-      return message.error("Sleep time should be before wake-up time.");
+      notificationFunction(
+        "error",
+        "Sleep time should be before wake-up time.",
+        "Error"
+      );
+      return;
     }
 
     const data = {
@@ -49,7 +60,7 @@ function SleepTrackerModal({ visible, onClose, trackerId, initialValues }) {
 
   return (
     <Modal
-      title="Nhập thông tin giấc ngủ"
+      title="Enter information sleep"
       open={visible}
       onCancel={onClose}
       footer={
@@ -71,7 +82,7 @@ function SleepTrackerModal({ visible, onClose, trackerId, initialValues }) {
       }
     >
       <div className="mb-4">
-        <label className="block mb-1 font-medium">Thời gian đi ngủ:</label>
+        <label className="block mb-1 font-medium">Sleep time:</label>
         <DatePicker
           className="w-full custom-datepicker"
           showTime
@@ -82,7 +93,7 @@ function SleepTrackerModal({ visible, onClose, trackerId, initialValues }) {
         />
       </div>
       <div>
-        <label className="block mb-1 font-medium">Thời gian thức dậy:</label>
+        <label className="block mb-1 font-medium">Wake-up time:</label>
         <DatePicker
           className="w-full custom-datepicker"
           showTime

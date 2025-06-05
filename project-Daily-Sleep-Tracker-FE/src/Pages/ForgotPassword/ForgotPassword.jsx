@@ -1,9 +1,9 @@
 import React from "react";
-import { Input, Typography, message } from "antd";
+import { Input, Typography } from "antd";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
-import { authServices } from "../../Services/Auth/AuthServices";
 import ButtonCustom from "../../Components/ButtonCustom/ButtonCustom";
+import { forgotPasswordAction } from "../../Redux/Actions/AuthAction/AuthAction";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
@@ -12,18 +12,15 @@ const ForgotPassword = () => {
     initialValues: { email: "" },
     validate: (values) => {
       const errors = {};
-      if (!values.email) errors.email = "Vui lòng nhập email!";
+      if (!values.email) errors.email = "Please enter your email!";
       return errors;
     },
-    onSubmit: async (values) => {
+    onSubmit: async (values, dispatch) => {
       try {
-        await authServices.forgotPassword(values.email);
-        message.success(
-          "Đã gửi email khôi phục mật khẩu! Vui lòng kiểm tra hộp thư đến của bạn."
-        );
+        await dispatch(forgotPasswordAction(values.email));
         navigate(`/login`);
       } catch {
-        // lỗi xử lý trong action
+        //  đã xử lý lỗi ở action
       }
     },
   });

@@ -1,6 +1,6 @@
 // src/pages/ResetPassword/ResetYourPassword.jsx
 import React from "react";
-import { Input, Typography, message } from "antd";
+import { Input, Typography } from "antd";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import ButtonCustom from "../../Components/ButtonCustom/ButtonCustom";
@@ -17,9 +17,9 @@ const ResetYourPassword = () => {
     initialValues: { password: "" },
     validate: (v) => {
       const e = {};
-      if (!v.password) e.password = "Vui lòng nhập mật khẩu mới!";
+      if (!v.password) e.password = "Please enter new password!";
       else if (v.password.length < 6)
-        e.password = "Mật khẩu phải có ít nhất 6 ký tự!";
+        e.password = "Password must be at least 6 characters!";
       return e;
     },
     onSubmit: async (values, { setSubmitting }) => {
@@ -27,7 +27,7 @@ const ResetYourPassword = () => {
         await dispatch(resetPasswordAction(values.password, token));
         navigate("/login");
       } catch (error) {
-        message.error("Đổi mật khẩu thất bại!", error);
+        // đã xử lý catch ở action
       } finally {
         setSubmitting(false);
       }

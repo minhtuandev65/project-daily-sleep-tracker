@@ -36,18 +36,15 @@ function SplashScreenPage() {
             >
               Daily Sleep Tracker
             </Text>{" "}
-            là một ứng dụng hỗ trợ người dùng theo dõi, ghi lại và cải thiện
-            chất lượng giấc ngủ của mình một cách dễ dàng và hiệu quả. Ứng dụng
-            được thiết kế với giao diện thân thiện, cho phép người dùng ghi nhận
-            thời gian đi ngủ, thời gian thức dậy, tổng thời lượng ngủ và cảm
-            nhận về chất lượng giấc ngủ mỗi ngày.
+            is an application that helps users track, record and improve their
+            sleep quality easily and effectively. The application is designed
+            with a friendly interface, allowing users to record their sleep
+            time, wake up time, total sleep time and feel about their sleep
+            quality every day.
           </Paragraph>
 
           <Paragraph className="text-[20px] max-md:text-[16px] max-sm:text-[12px] mt-4">
-            Trong cuộc sống hiện đại, giấc ngủ chất lượng là một trong những yếu
-            tố quan trọng giúp cơ thể phục hồi, cải thiện tinh thần và tăng hiệu
-            suất làm việc. Tuy nhiên, nhiều người thường bỏ qua hoặc không để ý
-            đến thói quen ngủ của mình.
+            In modern life, quality sleep is one of the important factors that helps the body recover, improve the spirit and increase work performance. However, many people often ignore or do not pay attention to their sleeping habits.
             <Text
               strong
               className="text-[20px] max-md:text-[17px] max-sm:text-[13px]"
@@ -55,15 +52,14 @@ function SplashScreenPage() {
               {" "}
               Daily Sleep Tracker{" "}
             </Text>{" "}
-            giúp người dùng nhận ra các xu hướng trong giấc ngủ, từ đó đưa ra
-            điều chỉnh phù hợp để ngủ ngon hơn và sống khỏe mạnh hơn.
+            helps users recognize sleep trends, thereby making appropriate adjustments to sleep better and live healthier.
           </Paragraph>
 
           <Title
             level={2}
             className="text-2xl mt-10 max-md:text-xl max-sm:text-[20px]"
           >
-            🌞 Ứng dụng giúp gì cho bạn?
+            🌞 How can the app help you?
           </Title>
 
           <Space
@@ -76,42 +72,42 @@ function SplashScreenPage() {
                 twoToneColor="#52c41a"
                 className="mr-2 text-[20px]"
               />
-              Ghi lại thời gian ngủ và thức dậy mỗi ngày.
+              Tracker your sleep and wake up times every day.
             </Text>
             <Text>
               <ScheduleTwoTone
                 twoToneColor="#1890ff"
                 className="mr-2 text-[20px]"
               />
-              Theo dõi tổng thời gian ngủ và chất lượng giấc ngủ theo thời gian.
+              Track total sleep time and sleep quality over time.
             </Text>
             <Text>
               <BulbTwoTone
                 twoToneColor="#fadb14"
                 className="mr-2 text-[20px]"
               />
-              Thêm ghi chú cá nhân về thói quen hoặc cảm giác sau mỗi giấc ngủ.
+              Add personal notes about your habits or how you feel after each sleep.
             </Text>
             <Text>
               <SmileTwoTone
                 twoToneColor="#722ed1"
                 className="mr-2 text-[20px]"
               />
-              Nhìn lại lịch sử giấc ngủ để phát hiện các vấn đề lặp lại.
+              Review sleep history to detect recurring problems.
             </Text>
             <Text>
               <HeartTwoTone
                 twoToneColor="#eb2f96"
                 className="mr-2 text-[20px]"
               />
-              Hỗ trợ người dùng hình thành thói quen ngủ khoa học, đều đặn hơn.
+              Support users to form more scientific and regular sleeping habits.
             </Text>
           </Space>
         </Typography>
 
         <div className="w-[200px] mt-10 flex flex-col gap-2 max-md:w-full max-sm:w-full">
           <Title level={4} className="mb-2">
-            Bản ghi giấc ngủ
+            Sleep records
           </Title>
           <div className="w-[150px]">
             <Link to={"/login"}>
@@ -121,7 +117,7 @@ function SplashScreenPage() {
                 text={
                   <span className="flex items-center justify-center gap-2">
                     <PlusOutlined className="text-[18px] mr-1" />
-                    Entry
+                    New Entry
                   </span>
                 }
                 block

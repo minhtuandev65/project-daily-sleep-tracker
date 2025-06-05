@@ -7,6 +7,7 @@ const calculateSleepDuration = (sleepTime, wakeTime) => {
     const wake = new Date(wakeTime)
     const durationMs = wake - sleep
     const durationHours = durationMs / (1000 * 60 * 60)
+
     return parseFloat(durationHours.toFixed(2))
 }
 const getDaysFromRange = (range) => {
@@ -196,6 +197,31 @@ const updateSleepTraker = async (trackerId, data) => {
     )
     return update
 }
+// hàm tổng hợp lấy số liệu thống kê và theo dõi giấc ngủ theo ngày
+const getSleepStatsByDays = async (userId, days) => {
+    const [
+        sleepTrackers,
+        averageDuration,
+        averageTimes,
+        countLessThan6,
+        countMoreThan8
+    ] = await Promise.all([
+        getSleepTrackersByDays(userId, days),
+        getAverageSleepDurationByDays(userId, days),
+        getAverageSleepAndWakeTime(userId, days),
+        countDaysWithSleepLessThan6Hours(userId, days),
+        countDaysWithSleepMoreThan8Hours(userId, days)
+    ])
+
+    return {
+        sleepTrackers,
+        averageDuration,
+        ...averageTimes,
+        countSleepLessThan6Hours: countLessThan6,
+        countSleepMoreThan8Hours: countMoreThan8
+    }
+}
+
 export const sleepTrackersService = {
     createNew,
     calculateSleepDuration,
@@ -205,5 +231,6 @@ export const sleepTrackersService = {
     countDaysWithSleepMoreThan8Hours,
     getAverageSleepAndWakeTime,
     getAverageSleepDurationByDays,
-    updateSleepTraker
+    updateSleepTraker,
+    getSleepStatsByDays
 }

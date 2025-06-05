@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import SleepTrackerModal from "./SleepTrackerModal/SleepTrackerModal";
 import { Layout, Typography, Row, Col, Space } from "antd";
-import ChartSleepTrackers from "./ChartSleepTrackers/ChartSleepTrackers";
 import SleepStats from "./SleepStats/SleepStats";
 import ButtonCustom from "../../../Components/ButtonCustom/ButtonCustom";
+import SleepDurationChartArea from "./ChartSleepTrackers/SleepDurationChartArea/SleepDurationChartArea";
+import SleepTImeChartBar from "./ChartSleepTrackers/SleepTImeChartBar/SleepTImeChartBar";
 
 const { Title } = Typography;
 const { Content } = Layout;
@@ -12,6 +13,7 @@ const { Content } = Layout;
 function HomePageUser() {
   const [modalVisible, setModalVisible] = useState(false);
   const [days, setDays] = useState(7);
+  const [chartType, setChartType] = useState("duration");
 
   return (
     <Layout className="bg-white min-h-screen px-6 md:px-[150px] py-[50px]">
@@ -66,13 +68,36 @@ function HomePageUser() {
         </div>
 
         {/* Biểu đồ và thống kê */}
+
         <Row gutter={[24, 24]}>
           <Col xs={24} md={12}>
-            <div className="border border-gray-300 p-4 rounded-lg md:p-">
+            <div className="border border-gray-300 p-4 rounded-lg md:p-6">
+              <div className="flex justify-center gap-4 my-4 w-full max-w-[350px] mx-auto">
+                <ButtonCustom
+                  type="default"
+                  onClick={() => setChartType("duration")}
+                  text="Sleep Duration"
+                  className={`btnCustom ${
+                    chartType === "duration" ? "active" : ""
+                  }`}
+                />
+                <ButtonCustom
+                  type="default"
+                  onClick={() => setChartType("time")}
+                  text="Sleep Time"
+                  className={`btnCustom ${
+                    chartType === "time" ? "active" : ""
+                  }`}
+                />
+              </div>
               <Title level={3} className="!mb-2">
-                Sleep Duration
+                {chartType === "duration" ? "Sleep Duration" : "Sleep Time"}
               </Title>
-              <ChartSleepTrackers days={days} />
+              {chartType === "duration" ? (
+                <SleepDurationChartArea days={days} />
+              ) : (
+                <SleepTImeChartBar days={days} />
+              )}
             </div>
           </Col>
 

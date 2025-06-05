@@ -15,18 +15,18 @@ export default function RegisterPage() {
       displayName: "",
       password: "",
       email: "",
-      role: "BUYER",
+      role: "USER",
     },
     validate: (values) => {
       const errors = {};
       if (!values.displayName)
-        errors.displayName = "Vui lòng nhập tên tài khoản!";
-      if (!values.password) errors.password = "Vui lòng nhập mật khẩu!";
-      if (!values.email) errors.email = "Vui lòng nhập email!";
+        errors.displayName = "Please enter account name!";
+      if (!values.password) errors.password = "Please enter password!";
+      if (!values.email) errors.email = "Please enter email!";
       if (!values.xacNhanMatKhau)
-        errors.xacNhanMatKhau = "Vui lòng nhập lại mật khẩu!";
+        errors.xacNhanMatKhau = "Please re-enter password!";
       else if (values.xacNhanMatKhau !== values.password)
-        errors.xacNhanMatKhau = "Mật khẩu không khớp!";
+        errors.xacNhanMatKhau = "Passwords do not match!";
       return errors;
     },
     onSubmit: async (values) => {
@@ -35,7 +35,7 @@ export default function RegisterPage() {
         await dispatch(registerAction(registerData));
         navigate("/login");
       } catch (error) {
-        // đã xử lý lỗi ở trong action bằng message.error rồi
+        // đã xử lý lỗi ở trong action
       }
     },
   });
@@ -52,14 +52,14 @@ export default function RegisterPage() {
           level={3}
           className="text-center mb-8 text-[22px] md:text-[24px]"
         >
-          Đăng ký người dùng
+          Register a user account
         </Typography.Title>
 
         {/* displayName */}
         <div className="mb-6">
           <Input
             name="displayName"
-            placeholder="Tên tài khoản"
+            placeholder="Account name"
             autoComplete="displayName"
             value={formik.values.displayName}
             onChange={formik.handleChange}
@@ -82,7 +82,7 @@ export default function RegisterPage() {
         <div className="mb-6">
           <Input.Password
             name="password"
-            placeholder="Mật khẩu"
+            placeholder="Password"
             autoComplete="new-password"
             value={formik.values.password}
             onChange={formik.handleChange}
@@ -103,7 +103,7 @@ export default function RegisterPage() {
         <div className="mb-6">
           <Input.Password
             name="xacNhanMatKhau"
-            placeholder="Xác nhận mật khẩu"
+            placeholder="Confirm password"
             autoComplete="new-password"
             value={formik.values.xacNhanMatKhau}
             onChange={formik.handleChange}
@@ -141,11 +141,11 @@ export default function RegisterPage() {
         )}
 
         {/* ĐĂNG KÝ */}
-        <ButtonCustom htmlType="submit" type="text" text="Đăng Nhập" block />
+        <ButtonCustom htmlType="submit" type="text" text="Register" block />
 
         <div style={{ textAlign: "center", marginTop: 16 }}>
           <Typography.Text>
-            Bạn đã có tài khoản?{" "}
+           Already have an account?{" "}
             <Link
               to="/login"
               style={{
@@ -154,7 +154,7 @@ export default function RegisterPage() {
                 fontWeight: 500,
               }}
             >
-              Đăng nhập
+              Login
             </Link>
           </Typography.Text>
         </div>

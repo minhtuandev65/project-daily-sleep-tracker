@@ -41,7 +41,7 @@ export default function LoginPage() {
           level={3}
           className="text-center mb-8 text-[22px] md:text-[24px]"
         >
-          Đăng Nhập
+          Login
         </Typography.Title>
 
         {/* Email */}
@@ -65,7 +65,7 @@ export default function LoginPage() {
         <div className="mb-6">
           <Input.Password
             name="password"
-            placeholder="Mật khẩu"
+            placeholder="Password"
             autoComplete="current-password"
             value={values.password}
             onChange={handleChange}
@@ -79,7 +79,7 @@ export default function LoginPage() {
         </div>
 
         {/* Submit */}
-        <ButtonCustom htmlType="submit" type="text" text="Đăng Nhập" block />
+        <ButtonCustom htmlType="submit" type="text" text="Login" block />
 
         {/* Links */}
         <div style={{ textAlign: "center", marginTop: 24 }}>
@@ -92,8 +92,9 @@ export default function LoginPage() {
               fontWeight: 500,
             }}
           >
-            Đăng Ký
+            Resgister
           </Link>
+          
           <Link
             to="/account/forgotPassword"
             style={{
@@ -102,7 +103,7 @@ export default function LoginPage() {
               fontWeight: 500,
             }}
           >
-            Quên Mật Khẩu
+            Forgot password
           </Link>
         </div>
       </form>

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getSleepTrackersByDaysAction } from "../../../../Redux/Actions/UsersAction/SleepTrackersAction/SleepTrackersAction";
 import ButtonCustom from "../../../../Components/ButtonCustom/ButtonCustom";
 import ModelEntry from "../SleepTrackerModal/SleepTrackerModal";
+import dayjs from "dayjs";
 
 function SleepStats({ days }) {
   const dispatch = useDispatch();
@@ -13,15 +14,14 @@ function SleepStats({ days }) {
   const [openModal, setOpenModal] = useState(false);
   const [selectedTracker, setSelectedTracker] = useState(null);
 
-  // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 7; // Số bản ghi mỗi trang
+  const pageSize = 7;
 
   useEffect(() => {
     if (days) {
       const rangeStr = days === 7 ? "7days" : "30days";
       dispatch(getSleepTrackersByDaysAction(rangeStr));
-      setCurrentPage(1); // Reset trang khi days thay đổi
+      setCurrentPage(1);
     }
   }, [dispatch, days]);
 
@@ -49,7 +49,9 @@ function SleepStats({ days }) {
     return `${hh}:${mm}`;
   };
 
-  if (!Array.isArray(sleepTrackersByDays) || sleepTrackersByDays.length === 0) {
+  const trackerList = sleepTrackersByDays?.sleepTrackers || [];
+
+  if (trackerList.length === 0) {
     return (
       <div className="text-center py-6 text-gray-500 text-base">
         No data sleep tracker...
@@ -57,14 +59,23 @@ function SleepStats({ days }) {
     );
   }
 
-  // Tính toán bản ghi cho trang hiện tại
-  const totalRecords = sleepTrackersByDays.length;
+  const today = dayjs().endOf("day");
+  const fromDate = today.subtract(days - 1, "day").startOf("day");
+
+  const filteredRecords = trackerList.filter((record) => {
+    const sleep = dayjs(record.sleepTime);
+    return (
+      sleep.isSame(fromDate) ||
+      (sleep.isAfter(fromDate) && sleep.isBefore(today.add(1, "second")))
+    );
+  });
+
+  const totalRecords = filteredRecords.length;
   const totalPages = Math.ceil(totalRecords / pageSize);
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = startIndex + pageSize;
-  const currentRecords = sleepTrackersByDays.slice(startIndex, endIndex);
+  const currentRecords = filteredRecords.slice(startIndex, endIndex);
 
-  // Hàm chuyển trang
   const goToPage = (pageNum) => {
     if (pageNum < 1 || pageNum > totalPages) return;
     setCurrentPage(pageNum);
@@ -74,31 +85,31 @@ function SleepStats({ days }) {
     <>
       <div className="overflow-x-auto">
         <table className="min-w-full table-auto border border-gray-300">
-          <thead className="bg-gray-100 text-sm text-gray-700">
+          <thead className="bg-blue-200 text-sm text-black">
             <tr>
-              <th className="border px-4 py-2 text-left">Date</th>
-              <th className="border px-4 py-2 text-left">Time Sleep</th>
-              <th className="border px-4 py-2 text-left">Time Wake</th>
-              <th className="border px-4 py-2 text-left">Duration (h)</th>
-              <th className="border px-4 py-2 text-left">Action</th>
+              <th className="border px-4 py-2 text-center">Date</th>
+              <th className="border px-4 py-2 text-center">Time Sleep</th>
+              <th className="border px-4 py-2 text-center">Time Wake</th>
+              <th className="border px-4 py-2 text-center">Duration (h)</th>
+              <th className="border px-4 py-2 text-center">Action</th>
             </tr>
           </thead>
           <tbody className="text-sm text-gray-800">
             {currentRecords.map((record) => (
               <tr key={record._id} className="hover:bg-gray-50">
-                <td className="border px-4 py-2">
+                <td className="border px-4 py-2 text-center">
                   {formatDate(record.sleepTime)}
                 </td>
-                <td className="border px-4 py-2">
+                <td className="border px-4 py-2 text-center">
                   {formatTime(record.sleepTime)}
                 </td>
-                <td className="border px-4 py-2">
+                <td className="border px-4 py-2 text-center">
                   {formatTime(record.wakeTime)}
                 </td>
-                <td className="border px-4 py-2">
+                <td className="border px-4 py-2 text-center">
                   {record.duration?.toFixed(2) || "0.00"}
                 </td>
-                <td className="border px-4 py-2">
+                <td className="border px-4 py-2 text-center">
                   <ButtonCustom
                     text="Update"
                     onClick={() => handleOpenEdit(record)}
@@ -110,7 +121,6 @@ function SleepStats({ days }) {
         </table>
       </div>
 
-      {/* Phân trang */}
       {totalPages > 1 && (
         <div className="flex justify-center items-center gap-2 mt-4">
           <button
@@ -120,8 +130,6 @@ function SleepStats({ days }) {
           >
             Prev
           </button>
-
-          {/* Hiển thị số trang đơn giản */}
           {Array.from({ length: totalPages }, (_, i) => (
             <button
               key={i + 1}
@@ -135,7 +143,6 @@ function SleepStats({ days }) {
               {i + 1}
             </button>
           ))}
-
           <button
             className="px-3 py-1 border rounded disabled:opacity-50"
             onClick={() => goToPage(currentPage + 1)}
