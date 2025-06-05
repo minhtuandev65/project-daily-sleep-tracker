@@ -136,7 +136,7 @@ export const forgotPasswordAction = (emailData) => {
   };
 };
 
-export const verifyAcountAction = (emailData, token) => {
+export const verifyAcountAction = (emailData, token, navigate) => {
   return async (dispatch) => {
     try {
       dispatch(displayLoadingAction);
@@ -151,6 +151,7 @@ export const verifyAcountAction = (emailData, token) => {
         "Success"
       );
       dispatch(hideLoadingAction);
+      navigate("/login");
     } catch (error) {
       notificationFunction("error", "Account verification failed!", "Error");
       dispatch(hideLoadingAction);
