@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Navigate, useSearchParams } from "react-router-dom";
 import PageLoadingSpinner from "../../Components/Loading/PageLoadingSpinner";
 import { verifyAcountAction } from "../../Redux/Actions/AuthAction/AuthAction";
+import { useDispatch } from "react-redux";
 function AccountVerification() {
   const [searchParams] = useSearchParams();
   const { email, token } = Object.fromEntries([...searchParams]);
-
+  const dispatch = useDispatch();
   const [verified, setVerified] = useState(false);
   const [verifying, setVerifying] = useState(true);
   const [error, setError] = useState(false);
@@ -29,7 +30,7 @@ function AccountVerification() {
     };
 
     verify();
-  }, [email, token]);
+  }, [email, token, dispatch]);
 
   // ❌ Nếu thiếu param hoặc lỗi xác thực thì chuyển 404
   if (!email || !token || error) {
