@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import SleepTrackerModal from "./SleepTrackerModal/SleepTrackerModal";
 import { Layout, Typography, Row, Col, Space } from "antd";
@@ -6,15 +6,27 @@ import SleepStats from "./SleepStats/SleepStats";
 import ButtonCustom from "../../../Components/ButtonCustom/ButtonCustom";
 import SleepDurationChartArea from "./ChartSleepTrackers/SleepDurationChartArea/SleepDurationChartArea";
 import SleepTImeChartBar from "./ChartSleepTrackers/SleepTImeChartBar/SleepTImeChartBar";
+import { useDispatch, useSelector } from "react-redux";
+import { getSleepTrackersByDaysAction } from "../../../Redux/Actions/UsersAction/SleepTrackersAction/SleepTrackersAction";
 
 const { Title } = Typography;
 const { Content } = Layout;
 
 function HomePageUser() {
+  const dispatch = useDispatch();
   const [modalVisible, setModalVisible] = useState(false);
   const [days, setDays] = useState(7);
   const [chartType, setChartType] = useState("duration");
+  const { sleepTrackersByDays } = useSelector(
+    (state) => state.SleepTrackersReducer
+  );
 
+  useEffect(() => {
+    if (days) {
+      const rangeStr = days === 7 ? "7days" : "30days";
+      dispatch(getSleepTrackersByDaysAction(rangeStr));
+    }
+  }, [dispatch, days]);
   return (
     <Layout className="bg-white min-h-screen px-6 md:px-[150px] py-[50px]">
       <Content>
@@ -39,7 +51,7 @@ function HomePageUser() {
               text={
                 <span className="flex items-center justify-center gap-2">
                   <PlusOutlined className="text-lg" />
-                  Entry
+                  New Entry
                 </span>
               }
             />
@@ -94,9 +106,12 @@ function HomePageUser() {
                 {chartType === "duration" ? "Sleep Duration" : "Sleep Time"}
               </Title>
               {chartType === "duration" ? (
-                <SleepDurationChartArea days={days} />
+                <SleepDurationChartArea
+                  data={sleepTrackersByDays}
+                  days={days}
+                />
               ) : (
-                <SleepTImeChartBar days={days} />
+                <SleepTImeChartBar data={sleepTrackersByDays} />
               )}
             </div>
           </Col>
@@ -106,7 +121,7 @@ function HomePageUser() {
               <Title level={3} className="!mb-2">
                 Sleep Stats
               </Title>
-              <SleepStats days={days} />
+              <SleepStats days={days} data={sleepTrackersByDays} />
             </div>
           </Col>
         </Row>

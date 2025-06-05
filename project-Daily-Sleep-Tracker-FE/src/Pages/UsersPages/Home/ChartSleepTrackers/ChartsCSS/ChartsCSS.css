@@ -2,7 +2,9 @@
   opacity: 1 !important;
   display: block !important;
 }
-
+.recharts-layer {
+  font-size: 12px;
+}
 @media screen and (max-width: 600px) {
   .recharts-layer {
     font-size: 10px;

@@ -1,6 +1,4 @@
-import React, { useEffect, useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getSleepTrackersByDaysAction } from "../../../../../Redux/Actions/UsersAction/SleepTrackersAction/SleepTrackersAction";
+import React, { useMemo } from "react";
 import {
   AreaChart,
   Line,
@@ -11,45 +9,35 @@ import {
   ResponsiveContainer,
   Area,
 } from "recharts";
-import "./SleepDurationChartArea.css";
-function SleepDurationChartArea({ days }) {
-  const dispatch = useDispatch();
-  const { sleepTrackersByDays } = useSelector(
-    (state) => state.SleepTrackersReducer
-  );
-
-  useEffect(() => {
-    if (days) {
-      const rangeStr = days === 7 ? "7days" : "30days";
-      dispatch(getSleepTrackersByDaysAction(rangeStr));
-    }
-  }, [dispatch, days]);
+import "../ChartsCSS/ChartsCSS.css";
+import {
+  formatDate,
+  formatTime,
+} from "../../../../../Utils/formatDate/formatDate";
+function SleepDurationChartArea({ data, days }) {
   const chartData = useMemo(() => {
-    const trackers = sleepTrackersByDays?.sleepTrackers || [];
+    const trackers = data?.sleepTrackers || [];
     return trackers.map((record) => {
-      const dateObj = new Date(record.sleepTime);
-      const dateStr = dateObj.toISOString().split("T")[0];
+      const dateStr = formatDate(record.sleepTime); // format ngày theo utils (ví dụ "06/05")
       return {
         date: dateStr,
         duration: record.duration || 0,
-        sleepTime: new Date(record.sleepTime),
-        wakeTime: new Date(record.wakeTime),
+        sleepTime: formatTime(record.sleepTime), // format giờ đi ngủ
+        wakeTime: formatTime(record.wakeTime), // format giờ thức dậy
       };
     });
-  }, [sleepTrackersByDays]);
+  }, [data]);
 
   const stats = useMemo(() => {
-    if (!sleepTrackersByDays) return null;
+    if (!data) return null;
     return {
-      averageDuration: sleepTrackersByDays.averageDuration || 0,
-      averageSleepTime: sleepTrackersByDays.averageSleepTime || 0,
-      averageWakeTime: sleepTrackersByDays.averageWakeTime || 0,
-      countSleepLessThan6Hours:
-        sleepTrackersByDays.countSleepLessThan6Hours || 0,
-      countSleepMoreThan8Hours:
-        sleepTrackersByDays.countSleepMoreThan8Hours || 0,
+      averageDuration: data.averageDuration || 0,
+      averageSleepTime: formatTime(data.averageSleepTime) || "N/A",
+      averageWakeTime: formatTime(data.averageWakeTime) || "N/A",
+      countSleepLessThan6Hours: data.countSleepLessThan6Hours || 0,
+      countSleepMoreThan8Hours: data.countSleepMoreThan8Hours || 0,
     };
-  }, [sleepTrackersByDays]);
+  }, [data]);
 
   if (!chartData.length) {
     return (
@@ -66,10 +54,10 @@ function SleepDurationChartArea({ days }) {
           {/* Biểu đồ */}
           <ResponsiveContainer width="100%" height={300}>
             <AreaChart
-              width={500}
+              width={460}
               height={250}
               data={chartData}
-              margin={{ top: 20, right: 5, left: -30, bottom: 5 }}
+              margin={{ top: 40, right: 5, left: 10, bottom: 5 }}
             >
               <defs>
                 <linearGradient id="sleepGradient" x1="0" y1="0" x2="0" y2="1">
@@ -81,9 +69,21 @@ function SleepDurationChartArea({ days }) {
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis
                 dataKey="date"
-                tickFormatter={(dateStr) => dateStr.slice(5)}
+                angle={-10}
+                textAnchor="end"
+                interval={0}
+                height={70}
+                label={{ value: "Date", position: "right", offset: -25 }}
               />
-              <YAxis unit="h" />
+              <YAxis
+                unit="h"
+                label={{
+                  value: "Sleep duration",
+                  angle: 0, // Không xoay
+                  position: "top", // Đặt ở phía trên
+                  dy: -10, // Dịch lên trên thêm một chút nếu cần
+                }}
+              />
               <Tooltip
                 labelFormatter={(label) => `Ngày: ${label}`}
                 formatter={(value) => [`${value} giờ`, "Thời lượng"]}

@@ -1,40 +1,31 @@
-import React, { useEffect, useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getSleepTrackersByDaysAction } from "../../../../../Redux/Actions/UsersAction/SleepTrackersAction/SleepTrackersAction";
+import React, { useMemo } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
-
-function SleepTimeChartBar({ days }) {
-  const dispatch = useDispatch();
-  const { sleepTrackersByDays } = useSelector(
-    (state) => state.SleepTrackersReducer
-  );
-
-  useEffect(() => {
-    if (days) {
-      const rangeStr = days === 7 ? "7days" : "30days";
-      dispatch(getSleepTrackersByDaysAction(rangeStr));
-    }
-  }, [dispatch, days]);
-  console.log("charts bar", sleepTrackersByDays?.sleepTrackers);
+import {
+  formatDate,
+  formatTime,
+} from "../../../../../Utils/formatDate/formatDate";
+import "../ChartsCSS/ChartsCSS.css";
+function SleepTimeChartBar({ data }) {
   // Lấy dữ liệu thực tế từ sleepTrackersByDays.sleepTrackers (nếu có)
+  console.log("data bar", data)
   const chartData = useMemo(() => {
     return (
-      sleepTrackersByDays?.sleepTrackers?.map((record) => {
-        const dateObj = new Date(record.sleepTime);
-        const month = String(dateObj.getMonth() + 1).padStart(2, "0");
-        const day = String(dateObj.getDate()).padStart(2, "0");
-        const hours = String(dateObj.getHours()).padStart(2, "0");
-        const minutes = String(dateObj.getMinutes()).padStart(2, "0");
-        const decimalTime = parseInt(hours) + parseInt(minutes) / 60;
+      data?.sleepTrackers?.map((record) => {
+        const sleepTime = record.sleepTime;
+        const dateFormatted = formatDate(sleepTime); // ví dụ: "06/05"
+        const timeFormatted = formatTime(sleepTime); // ví dụ: "15:08"
+
+        const [hours, minutes] = timeFormatted.split(":").map(Number);
+        const decimalTime = hours + minutes / 60;
 
         return {
-          label: `${month}/${day} ${hours}:${minutes}`, // <--- dùng cả ngày + giờ
-          date: `${month}/${day}`,
+          label: `${dateFormatted} ${timeFormatted}`, // dùng cả ngày + giờ
+          date: dateFormatted,
           sleepHourDecimal: decimalTime,
         };
       }) || []
     );
-  }, [sleepTrackersByDays]);
+  }, [data]);
 
   if (!chartData.length) {
     return (
@@ -47,15 +38,15 @@ function SleepTimeChartBar({ days }) {
   return (
     <div className="w-full min-w-0 overflow-x-auto">
       <BarChart
-        width={500}
-        height={250}
+        width={700}
+        height={350}
         data={chartData}
         margin={{ top: 40, right: 5, left: 10, bottom: -30 }}
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis
           dataKey="date"
-          angle={-45}
+          angle={-10}
           textAnchor="end"
           interval={0}
           height={70}

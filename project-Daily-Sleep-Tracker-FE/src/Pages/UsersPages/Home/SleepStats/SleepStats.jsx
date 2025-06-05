@@ -1,15 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getSleepTrackersByDaysAction } from "../../../../Redux/Actions/UsersAction/SleepTrackersAction/SleepTrackersAction";
+import React, { useState } from "react";
 import ButtonCustom from "../../../../Components/ButtonCustom/ButtonCustom";
 import ModelEntry from "../SleepTrackerModal/SleepTrackerModal";
 import dayjs from "dayjs";
+import { formatDate, formatTime } from "../../../../Utils/formatDate/formatDate";
+function SleepStats({ days, data }) {
 
-function SleepStats({ days }) {
-  const dispatch = useDispatch();
-  const { sleepTrackersByDays } = useSelector(
-    (state) => state.SleepTrackersReducer
-  );
 
   const [openModal, setOpenModal] = useState(false);
   const [selectedTracker, setSelectedTracker] = useState(null);
@@ -17,13 +12,6 @@ function SleepStats({ days }) {
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 7;
 
-  useEffect(() => {
-    if (days) {
-      const rangeStr = days === 7 ? "7days" : "30days";
-      dispatch(getSleepTrackersByDaysAction(rangeStr));
-      setCurrentPage(1);
-    }
-  }, [dispatch, days]);
 
   const handleOpenEdit = (tracker) => {
     setSelectedTracker(tracker);
@@ -35,21 +23,7 @@ function SleepStats({ days }) {
     setSelectedTracker(null);
   };
 
-  const formatDate = (dateStr) => {
-    const d = new Date(dateStr);
-    const mm = (d.getMonth() + 1).toString().padStart(2, "0");
-    const dd = d.getDate().toString().padStart(2, "0");
-    return `${mm}/${dd}`;
-  };
-
-  const formatTime = (dateStr) => {
-    const d = new Date(dateStr);
-    const hh = d.getHours().toString().padStart(2, "0");
-    const mm = d.getMinutes().toString().padStart(2, "0");
-    return `${hh}:${mm}`;
-  };
-
-  const trackerList = sleepTrackersByDays?.sleepTrackers || [];
+  const trackerList = data?.sleepTrackers || [];
 
   if (trackerList.length === 0) {
     return (
