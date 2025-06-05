@@ -136,12 +136,13 @@ export const forgotPasswordAction = (emailData) => {
   };
 };
 
-export const verifyAcountAction = (emailData, token) => {
+export const verifyAcountAction = ({email, token}) => {
   return async (dispatch) => {
     try {
       dispatch(displayLoadingAction);
+      console.log("action", email, token);
       await authServices.verifyEmail({
-        emailData,
+        email,
         token,
       });
 

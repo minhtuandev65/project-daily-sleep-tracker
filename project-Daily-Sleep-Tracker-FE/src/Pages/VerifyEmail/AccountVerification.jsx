@@ -18,9 +18,10 @@ function AccountVerification() {
       return;
     }
 
-    const verify = async (dispatch) => {
+    const verify = async () => {
       try {
-        await dispatch(verifyAcountAction(email, token));
+        
+        await dispatch(verifyAcountAction({email, token}));
         setVerified(true);
       } catch (err) {
         // đã xử lý lỗi ở action
