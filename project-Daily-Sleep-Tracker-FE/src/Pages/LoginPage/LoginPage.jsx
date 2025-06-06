@@ -31,7 +31,7 @@ export default function LoginPage() {
     formik;
 
   return (
-    <div className="w-screen h-screen bg-gradient-to-r from-[#a1d6e2] to-[#849a9e] flex justify-center items-center">
+    <div className="h-screen bg-gradient-to-r from-[#a1d6e2] to-[#849a9e] flex justify-center items-center">
       <form
         onSubmit={handleSubmit}
         autoComplete="off"
