@@ -105,26 +105,24 @@ function SleepDurationChartArea({ data, days }) {
       {/* Thống kê */}
       {stats && (
         <div className="mt-4 p-4 bg-gray-100 rounded-xl shadow-sm text-sm space-y-2">
-          <p>📊 Thống kê giấc ngủ {days} ngày gần đây:</p>
+          <p>📊 Sleep statistics for the last {days} days:</p>
           <p>
-            • 💤 Thời gian ngủ trung bình:{" "}
+            • 💤 Average sleep time:{" "}
             <strong>{stats.averageDuration} giờ</strong>
           </p>
           <p>
-            • ⚠️ Ngủ dưới 6 giờ:{" "}
+            • ⚠️ Sleep less than 6 hours:{" "}
             <strong>{stats.countSleepLessThan6Hours} ngày</strong>
           </p>
           <p>
-            • 🌙 Ngủ trên 8 giờ:{" "}
+            • 🌙 Sleep more than 8 hours:{" "}
             <strong>{stats.countSleepMoreThan8Hours} ngày</strong>
           </p>
           <p>
-            • ⏰ Giờ đi ngủ trung bình:{" "}
-            <strong>{stats.averageSleepTime}</strong>
+            • ⏰ Average sleeptime: <strong>{stats.averageSleepTime}</strong>
           </p>
           <p>
-            • 🌅 Giờ thức dậy trung bình:{" "}
-            <strong>{stats.averageWakeTime}</strong>
+            • 🌅 Average wake up time: <strong>{stats.averageWakeTime}</strong>
           </p>
         </div>
       )}
