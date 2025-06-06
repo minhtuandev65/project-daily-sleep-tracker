@@ -28,7 +28,7 @@ function SplashScreenHeader() {
             <ButtonCustom
               htmlType="submit"
               type="text"
-              text="Đăng Nhập"
+              text="Login"
               block
             />
           </Link>

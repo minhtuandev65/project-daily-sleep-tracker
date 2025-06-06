@@ -32,7 +32,7 @@ function HomeHeader() {
   const avataMenuItems = [
     {
       key: "1",
-      label: <span onClick={handleLogout}>Đăng xuất</span>,
+      label: <span onClick={handleLogout}>Logout</span>,
     },
   ];
 
@@ -66,7 +66,7 @@ function HomeHeader() {
       ) : (
         <Link to="/login" className="text-white font-semibold">
           <Typography.Text strong className="text-white">
-            Đăng nhập
+            Login
           </Typography.Text>
         </Link>
       )}
