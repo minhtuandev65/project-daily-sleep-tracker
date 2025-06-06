@@ -10,7 +10,7 @@
 
 ## 🧠 Tính năng chính
 
-- Đăng ký / đăng nhập, xác thực qua email (OTP)
+- Đăng ký / đăng nhập / quên mật khẩu, xác thực qua email ( xác thực bằng email )
 - Ghi lại thời gian đi ngủ và thức dậy
 - Hiển thị biểu đồ thời gian ngủ theo ngày/tuần
 - Thống kê tổng thời gian ngủ, Thời gian ngủ trung bình trong tuần.
