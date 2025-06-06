@@ -10,18 +10,29 @@ import { notificationFunction } from "../../../Utils/libs/Notification";
 // Tạo action để đăng nhập
 export const loginAction = (credentials, navigate) => {
   return async (dispatch) => {
+    const { email } = credentials;
+
+    const handleNavigateAndNotify = (role) => {
+      const path = role.includes("ADMIN") ? "/admin" : "/home";
+      navigate(path);
+      notificationFunction("success", `Hello ${email}`, "Successfully login");
+    };
+
     try {
       dispatch(displayLoadingAction);
+
       const {
         data: { role: roleArray },
       } = await authServices.checkRole(credentials);
+
       const role = Array.isArray(roleArray) ? roleArray[0] : roleArray;
-      const loginData = { ...credentials, role };
-      const { data: userData } = await authServices.login(loginData);
-      localStorage.setItem(
-        "USER_LOGIN",
-        JSON.stringify({ email: credentials.email, role })
-      );
+
+      const { data: userData } = await authServices.login({
+        ...credentials,
+        role,
+      });
+
+      localStorage.setItem("USER_LOGIN", JSON.stringify({ email, role }));
       localStorage.setItem("accessToken", userData.accessToken);
       localStorage.setItem("refreshToken", userData.refreshToken);
 
@@ -29,30 +40,17 @@ export const loginAction = (credentials, navigate) => {
         type: SET_LOGIN,
         payload: userData,
       });
-      // Bước 4: Kiểm tra role và điều hướng đến trang phù hợp
-      if (role.includes("ADMIN")) {
-        navigate("/admin");
-        notificationFunction(
-          "success",
-          `Hello ${credentials.email}`,
-          "Successfully login"
-        );
-      } else {
-        navigate("/home");
-        notificationFunction(
-          "success",
-          `Hello ${credentials.email}`,
-          "Successfully login"
-        );
-      }
+
+      handleNavigateAndNotify(role);
 
       dispatch(hideLoadingAction);
     } catch (error) {
-      notificationFunction("error", "Login failed: ", "Error");
+      notificationFunction("error", "Login failed", "Error");
       dispatch(hideLoadingAction);
     }
   };
 };
+
 // Tạo action để đăng xuất
 export const logoutAction = () => {
   return async (dispatch) => {
@@ -136,7 +134,7 @@ export const forgotPasswordAction = (emailData) => {
   };
 };
 
-export const verifyAcountAction = ({email, token}) => {
+export const verifyAcountAction = ({ email, token }) => {
   return async (dispatch) => {
     try {
       dispatch(displayLoadingAction);

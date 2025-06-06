@@ -35,8 +35,6 @@
 - **Babel** (for ES6+)
 - **Joi** for validation
 - **JWT** for authentication
-- **Multer** for file uploads
-- **Cloudinary** for media storage
 - **Day.js** for date/time handling
 - **Node-Cron** for scheduled tasks
 - **Cors** for cookie
