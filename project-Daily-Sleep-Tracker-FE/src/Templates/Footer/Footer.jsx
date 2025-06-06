@@ -20,7 +20,7 @@ function FooterTemplate() {
             level={5}
             className="!text-sm md:!text-base !font-bold !mb-0 !text-center md:!text-left"
           >
-            Hệ thống quản lý và theo dõi giấc ngủ hàng đầu Việt Nam <br />
+            Vietnam's leading sleep management and tracking system <br />
             Daily Sleep Tracker Co. Ltd. © 2016
           </Title>
         </div>
@@ -31,15 +31,15 @@ function FooterTemplate() {
             level={5}
             className="!text-sm md:!text-base !font-bold !mb-0 !text-center md:!text-left"
           >
-            Công ty TNHH Daily Sleep Tracker
+            Company Daily Sleep Tracker
           </Title>
           <Title
             level={5}
             className="!text-xs md:!text-sm !font-normal mt-2 !leading-[1.8] !text-center md:!text-left"
           >
-            Đại diện theo pháp luật: Huỳnh Minh Tuấn
+            Legal representative: Huỳnh Minh Tuấn
             <br />
-            Địa chỉ: Tầng 5, số 112 Cao Thắng, Phường 04, Quận 3, TP.HCM
+            Address: Tầng 5, số 112 Cao Thắng, Phường 04, Quận 3, TP.HCM
             <br />
             Hotline: 1900.xxx - Email:
           </Title>
