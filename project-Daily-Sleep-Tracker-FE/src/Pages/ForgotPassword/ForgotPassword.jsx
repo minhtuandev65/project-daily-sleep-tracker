@@ -26,7 +26,7 @@ const ForgotPassword = () => {
   });
 
   return (
-    <div className="w-screen h-screen bg-gradient-to-r from-[#a1d6e2] to-[#849a9e] flex justify-center items-center p-5">
+    <div className="h-screen bg-gradient-to-r from-[#a1d6e2] to-[#849a9e] flex justify-center items-center p-5">
       <form
         onSubmit={formik.handleSubmit}
         autoComplete="off"

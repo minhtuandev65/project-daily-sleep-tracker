@@ -1,4 +1,4 @@
-// src/pages/ResetPassword/ResetYourPassword.jsx
+// src/Pages/ResetPassword/ResetYourPassword.jsx
 import React from "react";
 import { Input, Typography } from "antd";
 import { useFormik } from "formik";
@@ -11,7 +11,6 @@ const ResetYourPassword = () => {
   const navigate = useNavigate();
   const url = new URL(window.location.href);
   const token = url.searchParams.get("token");
-  console.log(token);
 
   const formik = useFormik({
     initialValues: { password: "" },
@@ -24,10 +23,15 @@ const ResetYourPassword = () => {
     },
     onSubmit: async (values, { setSubmitting }) => {
       try {
-        await dispatch(resetPasswordAction(values.password, token));
-        navigate("/login");
+        const result = await dispatch(
+          resetPasswordAction(values.password, token)
+        );
+        if (result?.payload?.success) {
+          navigate("/login");
+        }
       } catch (error) {
         // đã xử lý catch ở action
+        setError("Something went wrong");
       } finally {
         setSubmitting(false);
       }
@@ -45,14 +49,14 @@ const ResetYourPassword = () => {
           level={3}
           className="text-center mb-8 text-[22px] md:text-[24px]"
         >
-          Đặt Lại Mật Khẩu
+          Reset your password
         </Typography.Title>
 
         {/* Password */}
         <div className="mb-6">
           <Input.Password
             name="password"
-            placeholder="Nhập mật khẩu mới"
+            placeholder="Enter new password"
             value={formik.values.password}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -72,7 +76,7 @@ const ResetYourPassword = () => {
         <ButtonCustom
           htmlType="submit"
           type="text"
-          text="Đặt lại mật khẩu"
+          text="Reset your password"
           block
         />
       </form>

@@ -35,7 +35,7 @@ const createNew = async (reqBody) => {
         email: reqBody.email,
         password: await bcrypt.hash(reqBody.password, 8),
         username: nameFromEmail,
-        displayName: nameFromEmail,
+        displayName: reqBody.displayName,
         verifyToken: uuidv4(),
         role: [requestedRole]
     }
