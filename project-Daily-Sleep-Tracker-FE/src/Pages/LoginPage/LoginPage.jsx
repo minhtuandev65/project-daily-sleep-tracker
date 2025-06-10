@@ -46,6 +46,9 @@ export default function LoginPage() {
 
         {/* Email */}
         <div className="mb-6">
+          {touched.email && errors.email && (
+            <Typography.Text type="danger">{errors.email}</Typography.Text>
+          )}
           <Input
             name="email"
             placeholder="Email"
@@ -56,13 +59,13 @@ export default function LoginPage() {
             status={touched.email && errors.email ? "error" : ""}
             className="h-[45px] md:h-[40px] lg:h-[48px] rounded-[10px] text-base md:text-lg px-3 border border-gray-300"
           />
-          {touched.email && errors.email && (
-            <Typography.Text type="danger">{errors.email}</Typography.Text>
-          )}
         </div>
 
         {/* Password */}
         <div className="mb-6">
+          {touched.password && errors.password && (
+            <Typography.Text type="danger">{errors.password}</Typography.Text>
+          )}
           <Input.Password
             name="password"
             placeholder="Password"
@@ -73,9 +76,6 @@ export default function LoginPage() {
             status={touched.password && errors.password ? "error" : ""}
             className="h-[45px] md:h-[40px] lg:h-[48px] rounded-[10px] text-base md:text-lg px-3 border border-gray-300"
           />
-          {touched.password && errors.password && (
-            <Typography.Text type="danger">{errors.password}</Typography.Text>
-          )}
         </div>
 
         {/* Submit */}
@@ -94,7 +94,7 @@ export default function LoginPage() {
           >
             Resgister
           </Link>
-          
+
           <Link
             to="/account/forgotPassword"
             style={{

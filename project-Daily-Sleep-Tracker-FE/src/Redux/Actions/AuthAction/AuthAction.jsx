@@ -73,16 +73,30 @@ export const registerAction = (registerData, navigate) => {
   return async (dispatch) => {
     try {
       dispatch(displayLoadingAction);
-      await authServices.register(registerData);
+      const response = await authServices.register(registerData); // nên return từ axios
+      console.log("✅ SUCCESS:", response);
+      if (response?.status === 200 || response?.status === 201) {
+        notificationFunction(
+          "success",
+          "Registration successful, please check your email to verify your account!",
+          "Success"
+        );
+        navigate("/login");
+      } else {
+        // fallback nếu server trả status lạ mà không throw lỗi
+        notificationFunction(
+          "error",
+          "Unexpected response from server.",
+          "Register failed"
+        );
+      }
+
       dispatch(hideLoadingAction);
-      navigate("/login");
     } catch (error) {
-      notificationFunction(
-        "success",
-        "Registration successful, please check your email to verify your account!",
-        "Success"
-      );
+      console.error("Register Error:", error);
       dispatch(hideLoadingAction);
+      const message = error?.response?.data?.message || "Registration failed!";
+      notificationFunction("error", message, "Register failed");
     }
   };
 };

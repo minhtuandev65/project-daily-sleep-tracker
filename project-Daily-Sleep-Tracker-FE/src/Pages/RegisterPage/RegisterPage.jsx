@@ -63,8 +63,7 @@ export default function RegisterPage() {
     onSubmit: async (values) => {
       const { xacNhanMatKhau, ...registerData } = values;
       try {
-        await dispatch(registerAction(registerData));
-        navigate("/login");
+        await dispatch(registerAction(registerData, navigate));
       } catch (error) {
         // đã xử lý lỗi ở trong action
       }
