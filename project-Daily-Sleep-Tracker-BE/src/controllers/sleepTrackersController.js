@@ -8,10 +8,10 @@ const createNew = async (req, res, next) => {
             ...req.body,
             userId
         }
-        const result = await sleepTrackersService.createNew(data)
+        await sleepTrackersService.createNew(data)
         res.status(StatusCodes.OK).json({
             message: 'success',
-            data: result
+            data: req.body
         })
     } catch (error) {
         next(error)
@@ -25,13 +25,10 @@ const updateSleepTracker = async (req, res, next) => {
             ...req.body,
             userId
         }
-        const result = await sleepTrackersService.updateSleepTraker(
-            trackerId,
-            data
-        )
+        await sleepTrackersService.updateSleepTraker(trackerId, data)
         res.status(StatusCodes.OK).json({
             message: 'Cập nhật bản ghi giấc ngủ thành công',
-            data: result
+            data: req.body
         })
     } catch (error) {
         next(error)

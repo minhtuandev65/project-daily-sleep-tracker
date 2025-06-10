@@ -7,7 +7,10 @@ import ButtonCustom from "../../../Components/ButtonCustom/ButtonCustom";
 import SleepDurationChartArea from "./ChartSleepTrackers/SleepDurationChartArea/SleepDurationChartArea";
 import SleepTImeChartBar from "./ChartSleepTrackers/SleepTImeChartBar/SleepTImeChartBar";
 import { useDispatch, useSelector } from "react-redux";
-import { getSleepTrackersByDaysAction } from "../../../Redux/Actions/UsersAction/SleepTrackersAction/SleepTrackersAction";
+import {
+  getSleepTrackersByDaysAction,
+  getSleepTrackersByUserIdAction,
+} from "../../../Redux/Actions/UsersAction/SleepTrackersAction/SleepTrackersAction";
 
 const { Title } = Typography;
 const { Content } = Layout;
@@ -17,7 +20,7 @@ function HomePageUser() {
   const [modalVisible, setModalVisible] = useState(false);
   const [days, setDays] = useState(7);
   const [chartType, setChartType] = useState("duration");
-  const { sleepTrackersByDays } = useSelector(
+  const { sleepTrackersByDays, sleepTrackersByUserId } = useSelector(
     (state) => state.SleepTrackersReducer
   );
 
@@ -27,6 +30,14 @@ function HomePageUser() {
       dispatch(getSleepTrackersByDaysAction(rangeStr));
     }
   }, [dispatch, days]);
+  useEffect(() => {
+    if (
+      modalVisible &&
+      (!sleepTrackersByUserId || sleepTrackersByUserId.length === 0)
+    ) {
+      dispatch(getSleepTrackersByUserIdAction());
+    }
+  }, [modalVisible, dispatch, sleepTrackersByUserId]);
   return (
     <Layout className="bg-white min-h-screen px-6 md:px-[150px] py-[50px]">
       <Content>
@@ -129,6 +140,7 @@ function HomePageUser() {
         <SleepTrackerModal
           visible={modalVisible}
           onClose={() => setModalVisible(false)}
+          existingTrackers={sleepTrackersByUserId}
         />
       </Content>
     </Layout>

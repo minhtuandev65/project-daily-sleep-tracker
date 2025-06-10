@@ -16,7 +16,7 @@ export const getSleepTrackersByUserIdAction = () => {
       const result = await sleepTrackersServices.getSleepTrackersByUserId();
       dispatch({
         type: SET_GET_SLEEP_TRACKERS_BY_USERID,
-        payload: result.data,
+        payload: result.data.data,
       });
       dispatch(hideLoadingAction);
     } catch (error) {
@@ -42,6 +42,7 @@ export const createNewSleepTrackersAction = (sleepTrackersData) => {
       );
       const days = "7days";
       dispatch(getSleepTrackersByDaysAction(days));
+      dispatch(getSleepTrackersByUserIdAction());
     } catch (error) {
       notificationFunction("error", "Sleep tracker creation failed!", "Error");
       dispatch(hideLoadingAction);
@@ -82,6 +83,7 @@ export const updateSleepTrackerAction = (trackerId, updateData) => {
       dispatch(hideLoadingAction);
       const days = "7days";
       dispatch(getSleepTrackersByDaysAction(days));
+      dispatch(getSleepTrackersByUserIdAction());
     } catch (error) {
       notificationFunction("error", "Error updating sleep tracker!", "Error");
       dispatch(hideLoadingAction);

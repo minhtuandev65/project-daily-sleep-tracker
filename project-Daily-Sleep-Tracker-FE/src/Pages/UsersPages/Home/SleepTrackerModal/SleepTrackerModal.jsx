@@ -9,7 +9,13 @@ import {
 import "./SleepTrackerModal.css";
 import ButtonCustom from "../../../../Components/ButtonCustom/ButtonCustom";
 import { notificationFunction } from "../../../../Utils/libs/Notification";
-function SleepTrackerModal({ visible, onClose, trackerId, initialValues }) {
+function SleepTrackerModal({
+  visible,
+  onClose,
+  trackerId,
+  initialValues,
+  existingTrackers = [],
+}) {
   const dispatch = useDispatch();
   const [sleepTime, setSleepTime] = useState(null);
   const [wakeTime, setWakeTime] = useState(null);
@@ -19,7 +25,7 @@ function SleepTrackerModal({ visible, onClose, trackerId, initialValues }) {
       setWakeTime(dayjs(initialValues.wakeTime));
     }
   }, [initialValues]);
-
+  console.log(existingTrackers)
   const handleSubmit = () => {
     if (!sleepTime || !wakeTime) {
       notificationFunction(
@@ -29,7 +35,7 @@ function SleepTrackerModal({ visible, onClose, trackerId, initialValues }) {
       );
       return;
     }
-
+    const now = dayjs();
     const sleep = dayjs(sleepTime);
     const wake = dayjs(wakeTime);
     if (sleep.isAfter(wake) || sleep.isSame(wake)) {
@@ -40,7 +46,60 @@ function SleepTrackerModal({ visible, onClose, trackerId, initialValues }) {
       );
       return;
     }
+    if (sleep.isAfter(now) || wake.isAfter(now)) {
+      notificationFunction(
+        "error",
+        "Sleep time and wake-up time cannot be in the future.",
+        "Invalid Time"
+      );
+      return;
+    }
 
+    const duration = wake.diff(sleep, "hour", true);
+    if (duration > 24) {
+      notificationFunction(
+        "error",
+        "Sleep duration cannot exceed 24 hours.",
+        "Too Long"
+      );
+      return;
+    }
+
+    // Kiểm tra trùng thời gian với các bản ghi cũ (nếu có truyền existingTrackers vào)
+    const dataExistingTrackers = existingTrackers.sleepTrackers;
+    console.log("dataExistingTrackers", dataExistingTrackers);
+    if (existingTrackers && existingTrackers.length > 0) {
+      const isOverlapping = existingTrackers.some((tracker) => {
+        // Nếu đang update thì bỏ qua bản ghi hiện tại
+        if (trackerId && tracker._id === trackerId) return false;
+
+        const existingSleep = dayjs(tracker.sleepTime);
+        const existingWake = dayjs(tracker.wakeTime);
+
+        // Cùng ngày
+        const sameDay =
+          sleep.isSame(existingSleep, "day") ||
+          wake.isSame(existingWake, "day");
+
+        // Kiểm tra trùng thời điểm (ngủ hoặc thức)
+        return (
+          sameDay &&
+          (sleep.isSame(existingSleep) ||
+            sleep.isSame(existingWake) ||
+            wake.isSame(existingSleep) ||
+            wake.isSame(existingWake))
+        );
+      });
+      console.log("isOverlapping", isOverlapping);
+      if (isOverlapping) {
+        notificationFunction(
+          "error",
+          "Sleep or wake-up time overlaps with an existing tracker on the same day.",
+          "Time Conflict"
+        );
+        return;
+      }
+    }
     const data = {
       sleepTime: dayjs(sleepTime).toISOString(),
       wakeTime: dayjs(wakeTime).toISOString(),
@@ -90,6 +149,7 @@ function SleepTrackerModal({ visible, onClose, trackerId, initialValues }) {
           value={sleepTime ? dayjs(sleepTime) : null}
           onChange={(value) => setSleepTime(value)}
           getPopupContainer={(trigger) => trigger.parentNode}
+          disabledDate={(current) => current && current > dayjs().endOf("day")}
         />
       </div>
       <div>
@@ -101,6 +161,7 @@ function SleepTrackerModal({ visible, onClose, trackerId, initialValues }) {
           value={wakeTime ? dayjs(wakeTime) : null}
           onChange={(value) => setWakeTime(value)}
           getPopupContainer={(trigger) => trigger.parentNode}
+          disabledDate={(current) => current && current > dayjs().endOf("day")}
         />
       </div>
     </Modal>
