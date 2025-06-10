@@ -6,6 +6,7 @@ import { useFormik } from "formik";
 
 import { loginAction } from "../../Redux/Actions/AuthAction/AuthAction";
 import ButtonCustom from "../../Components/ButtonCustom/ButtonCustom";
+import { emailRegex, passwordRegex } from "../../Utils/Validators/regex";
 
 export default function LoginPage() {
   const dispatch = useDispatch();
@@ -16,10 +17,26 @@ export default function LoginPage() {
       email: "",
       password: "",
     },
+    validateOnChange: true,
+    validateOnBlur: false,
     validate: (values) => {
       const errors = {};
-      if (!values.email) errors.email = "Vui lòng nhập email!";
-      if (!values.password) errors.password = "Vui lòng nhập mật khẩu!";
+      // Check error email
+      if (!values.email) {
+        errors.email = "Please enter email!";
+      } else if (values.email.length < 5 || values.email.length > 70) {
+        errors.email = "Email must be between 5 and 70 characters!";
+      } else if (!emailRegex.test(values.email)) {
+        errors.email =
+          "Invalid email format, Please enter your email useremail@example.com!";
+      }
+      // Check error password
+      if (!values.password) {
+        errors.password = "Please enter password!";
+      } else if (!passwordRegex.test(values.password)) {
+        errors.password =
+          "Password must be at least 8 characters, include 1 uppercase letter and 1 special character!";
+      }
       return errors;
     },
     onSubmit: (values) => {
@@ -56,7 +73,7 @@ export default function LoginPage() {
             value={values.email}
             onChange={handleChange}
             onBlur={handleBlur}
-            status={touched.email && errors.email ? "error" : ""}
+            status={touched.email && errors.email ? "error" : "success"}
             className="h-[45px] md:h-[40px] lg:h-[48px] rounded-[10px] text-base md:text-lg px-3 border border-gray-300"
           />
         </div>

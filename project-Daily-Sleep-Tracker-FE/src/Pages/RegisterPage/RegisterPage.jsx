@@ -5,6 +5,11 @@ import { useDispatch } from "react-redux";
 import { useFormik } from "formik";
 import ButtonCustom from "../../Components/ButtonCustom/ButtonCustom";
 import { registerAction } from "../../Redux/Actions/AuthAction/AuthAction";
+import {
+  displayNameRegex,
+  emailRegex,
+  passwordRegex,
+} from "../../Utils/Validators/regex";
 
 export default function RegisterPage() {
   const dispatch = useDispatch();
@@ -26,12 +31,6 @@ export default function RegisterPage() {
     validateOnBlur: false,
     validate: (values) => {
       const errors = {};
-      const emailRegex =
-        /^(?!.*\.\.)(?!\.)(?!.*\.$)[a-zA-Z0-9!#$%&'*+/=?^_`{|}~.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z]{2,})+$/;
-
-      const passwordRegex =
-        /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
-      const displayNameRegex = /^(?=(?:.*[A-Za-z]){2,})[A-Za-z0-9]{4,10}$/;
 
       // Check error tên hiển thị
       if (!values.displayName) {
@@ -50,6 +49,8 @@ export default function RegisterPage() {
       // Check error email
       if (!values.email) {
         errors.email = "Please enter email!";
+      } else if (values.email.length < 5 || values.email.length > 70) {
+        errors.email = "Email must be between 5 and 70 characters!";
       } else if (!emailRegex.test(values.email)) {
         errors.email =
           "Invalid email format, Please enter your email useremail@example.com!";

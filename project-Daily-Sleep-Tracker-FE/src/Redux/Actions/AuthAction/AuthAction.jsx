@@ -45,8 +45,9 @@ export const loginAction = (credentials, navigate) => {
 
       dispatch(hideLoadingAction);
     } catch (error) {
-      notificationFunction("error", "Login failed", "Error");
       dispatch(hideLoadingAction);
+      const message = error?.response?.data?.message || "Registration failed!";
+      notificationFunction("error", message, "Register failed");
     }
   };
 };
@@ -74,7 +75,6 @@ export const registerAction = (registerData, navigate) => {
     try {
       dispatch(displayLoadingAction);
       const response = await authServices.register(registerData); // nên return từ axios
-      console.log("✅ SUCCESS:", response);
       if (response?.status === 200 || response?.status === 201) {
         notificationFunction(
           "success",
@@ -93,7 +93,6 @@ export const registerAction = (registerData, navigate) => {
 
       dispatch(hideLoadingAction);
     } catch (error) {
-      console.error("Register Error:", error);
       dispatch(hideLoadingAction);
       const message = error?.response?.data?.message || "Registration failed!";
       notificationFunction("error", message, "Register failed");
@@ -148,25 +147,36 @@ export const forgotPasswordAction = (emailData) => {
   };
 };
 
-export const verifyAcountAction = ({ email, token }) => {
+export const verifyAcountAction = ({ email, token }, navigate) => {
   return async (dispatch) => {
     try {
       dispatch(displayLoadingAction);
-      console.log("action", email, token);
-      await authServices.verifyEmail({
+      const response = await authServices.verifyEmail({
         email,
         token,
       });
+      if (response?.status === 200 || response?.status === 201) {
+        notificationFunction(
+          "success",
+          "Authentication successful!",
+          "Success"
+        );
+        navigate("/login");
+      } else {
+        // fallback nếu server trả status lạ mà không throw lỗi
+        notificationFunction(
+          "error",
+          "Unexpected response from server.",
+          "Verify account failed"
+        );
+      }
 
-      notificationFunction(
-        "success",
-        "Authentication successful! Redirecting...",
-        "Success"
-      );
       dispatch(hideLoadingAction);
     } catch (error) {
-      notificationFunction("error", "Account verification failed!", "Error");
       dispatch(hideLoadingAction);
+      const message =
+        error?.response?.data?.message || "Verify account failed!";
+      notificationFunction("error", message, "Verify account failed");
     }
   };
 };
