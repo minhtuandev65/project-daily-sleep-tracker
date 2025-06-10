@@ -133,16 +133,29 @@ export const resetPasswordAction = (password, token) => {
   };
 };
 
-export const forgotPasswordAction = (emailData) => {
+export const forgotPasswordAction = (emailData, navigate) => {
   return async (dispatch) => {
     try {
       dispatch(displayLoadingAction);
-      await authServices.forgotPassword(emailData);
-      notificationFunction("success", "Please check your email.", "Success");
+      const response = await authServices.forgotPassword(emailData);
+
+      if (response?.status === 200 || response?.status === 201) {
+        notificationFunction("success", "Please check your email.", "Success");
+        navigate("/login");
+      } else {
+        // fallback nếu server trả status lạ mà không throw lỗi
+        notificationFunction(
+          "error",
+          "Unexpected response from server.",
+          "Forgot password failed"
+        );
+      }
       dispatch(hideLoadingAction);
     } catch (error) {
-      notificationFunction("error", "Forgot password failed", "Error");
       dispatch(hideLoadingAction);
+      const message =
+        error?.response?.data?.message || "Forgot password failed";
+      notificationFunction("error", message, "Forgot password failed");
     }
   };
 };

@@ -70,11 +70,11 @@ export default function RegisterPage() {
       }
     },
   });
-
+  const { handleSubmit, values, errors, touched } = formik;
   return (
     <div className="h-screen bg-gradient-to-r from-[#a1d6e2] to-[#849a9e] flex justify-center items-center">
       <form
-        onSubmit={formik.handleSubmit}
+        onSubmit={handleSubmit}
         autoComplete="off"
         className="bg-white w-full max-w-[420px] max-[376px]:max-w-[350px] p-8 md:p-10 rounded-[10px] shadow-xl"
         noValidate
@@ -88,21 +88,19 @@ export default function RegisterPage() {
 
         {/* displayName */}
         <div className="mb-6">
-          {formik.touched.displayName && formik.errors.displayName && (
+          {touched.displayName && errors.displayName && (
             <Typography.Text type="danger">
-              * {formik.errors.displayName}
+              * {errors.displayName}
             </Typography.Text>
           )}
           <Input
             name="displayName"
             placeholder="Account name"
             autoComplete="displayName"
-            value={formik.values.displayName}
+            value={values.displayName}
             onChange={handleChangeWithTouch}
             status={
-              formik.touched.displayName && formik.errors.displayName
-                ? "error"
-                : "success"
+              touched.displayName && errors.displayName ? "error" : "success"
             }
             className="h-[45px] md:h-[40px] lg:h-[48px] rounded-[10px] text-base md:text-lg px-3 border border-gray-300"
           />
@@ -110,31 +108,25 @@ export default function RegisterPage() {
 
         {/* PASSWORD */}
         <div className="mb-6">
-          {formik.touched.password && formik.errors.password && (
-            <Typography.Text type="danger">
-              * {formik.errors.password}
-            </Typography.Text>
+          {touched.password && errors.password && (
+            <Typography.Text type="danger">* {errors.password}</Typography.Text>
           )}
           <Input.Password
             name="password"
             placeholder="Password"
             autoComplete="new-password"
-            value={formik.values.password}
+            value={values.password}
             onChange={handleChangeWithTouch}
-            status={
-              formik.touched.password && formik.errors.password
-                ? "error"
-                : "success"
-            }
+            status={touched.password && errors.password ? "error" : "success"}
             className="h-[45px] md:h-[40px] lg:h-[48px] rounded-[10px] text-base md:text-lg px-3 border border-gray-300"
           />
         </div>
 
         {/* XÁC NHẬN MẬT KHẨU */}
         <div className="mb-6">
-          {formik.touched.xacNhanMatKhau && formik.errors.xacNhanMatKhau && (
+          {touched.xacNhanMatKhau && errors.xacNhanMatKhau && (
             <Typography.Text type="danger">
-              * {formik.errors.xacNhanMatKhau}
+              * {errors.xacNhanMatKhau}
             </Typography.Text>
           )}
           <Input.Password
@@ -144,7 +136,7 @@ export default function RegisterPage() {
             value={formik.values.xacNhanMatKhau}
             onChange={handleChangeWithTouch}
             status={
-              formik.touched.xacNhanMatKhau && formik.errors.xacNhanMatKhau
+              touched.xacNhanMatKhau && errors.xacNhanMatKhau
                 ? "error"
                 : "success"
             }
@@ -154,20 +146,16 @@ export default function RegisterPage() {
 
         {/* EMAIL */}
         <div className="mb-6">
-          {formik.touched.email && formik.errors.email && (
-            <Typography.Text type="danger">
-              * {formik.errors.email}
-            </Typography.Text>
+          {touched.email && errors.email && (
+            <Typography.Text type="danger">* {errors.email}</Typography.Text>
           )}
           <Input
             name="email"
             placeholder="useremail@example.com"
             autoComplete="email"
-            value={formik.values.email}
+            value={values.email}
             onChange={handleChangeWithTouch}
-            status={
-              formik.touched.email && formik.errors.email ? "error" : "success"
-            }
+            status={touched.email && errors.email ? "error" : "success"}
             className="h-[45px] md:h-[40px] lg:h-[48px] rounded-[10px] text-base md:text-lg px-3 border border-gray-300"
           />
         </div>

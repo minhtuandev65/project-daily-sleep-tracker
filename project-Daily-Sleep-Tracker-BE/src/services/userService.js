@@ -282,13 +282,14 @@ const forgotPassword = async (reqBody) => {
       <body style="margin:0; padding:0; font-family:Arial, sans-serif; background-color:#f4f4f4;">
 
          <!-- Header -->
-  <table width="100%" bgcolor="#000000" style="margin:0; padding:0;">
+  <table width="100%" cellpadding="0" cellspacing="0">
     <tr>
       <td align="center">
-        <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #000000;">
+        <table width="100%" bgcolor="#ffffff" cellpadding="30" cellspacing="0" style="margin: 0px auto; border-radius: 8px;">
           <tr>
-            <td align="center" style="padding: 20px 0;">
-              <img src="${APP_LOGO}" alt="Logo" style="width: 100%; display:block;" />
+            <td align="center">
+              <img src="${APP_LOGO}" alt="Logo" style="width: 600px; display: block; margin: 0 auto;" />
+
             </td>
           </tr>
         </table>
@@ -392,13 +393,14 @@ const resetPassword = async (reqBody) => {
       <body style="margin:0; padding:0; font-family:Arial, sans-serif; background-color:#f4f4f4;">
 
         <!-- Header -->
-  <table width="100%" bgcolor="#000000" style="margin:0; padding:0;">
+  <table width="100%" cellpadding="0" cellspacing="0">
     <tr>
       <td align="center">
-        <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #000000;">
+        <table width="100%" bgcolor="#ffffff" cellpadding="30" cellspacing="0" style="margin: 0px auto; border-radius: 8px;">
           <tr>
-            <td align="center" style="padding: 20px 0;">
-              <img src="${APP_LOGO}" alt="Logo" style="width: 100%; display:block;" />
+            <td align="center">
+              <img src="${APP_LOGO}" alt="Logo" style="width: 600px; display: block; margin: 0 auto;" />
+
             </td>
           </tr>
         </table>

@@ -11,7 +11,11 @@ import { emailRegex, passwordRegex } from "../../Utils/Validators/regex";
 export default function LoginPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const handleChangeWithTouch = (e) => {
+    const { name, value } = e.target;
+    formik.setFieldTouched(name, true); // Đánh dấu là đã chạm vào
+    formik.setFieldValue(name, value); // Cập nhật giá trị
+  };
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -44,7 +48,7 @@ export default function LoginPage() {
     },
   });
 
-  const { handleSubmit, handleChange, handleBlur, values, errors, touched } =
+  const { handleSubmit, values, errors, touched } =
     formik;
 
   return (
@@ -71,8 +75,7 @@ export default function LoginPage() {
             placeholder="Email"
             autoComplete="email"
             value={values.email}
-            onChange={handleChange}
-            onBlur={handleBlur}
+            onChange={handleChangeWithTouch}
             status={touched.email && errors.email ? "error" : "success"}
             className="h-[45px] md:h-[40px] lg:h-[48px] rounded-[10px] text-base md:text-lg px-3 border border-gray-300"
           />
@@ -88,8 +91,7 @@ export default function LoginPage() {
             placeholder="Password"
             autoComplete="current-password"
             value={values.password}
-            onChange={handleChange}
-            onBlur={handleBlur}
+            onChange={handleChangeWithTouch}
             status={touched.password && errors.password ? "error" : ""}
             className="h-[45px] md:h-[40px] lg:h-[48px] rounded-[10px] text-base md:text-lg px-3 border border-gray-300"
           />
