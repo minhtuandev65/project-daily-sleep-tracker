@@ -29,7 +29,7 @@ export const getSleepTrackersByUserIdAction = () => {
     }
   };
 };
-export const createNewSleepTrackersAction = (sleepTrackersData) => {
+export const createNewSleepTrackersAction = (sleepTrackersData, days) => {
   return async (dispatch) => {
     try {
       dispatch(displayLoadingAction);
@@ -40,7 +40,6 @@ export const createNewSleepTrackersAction = (sleepTrackersData) => {
         "Sleep tracker created successfully!",
         "Success"
       );
-      const days = "7days";
       dispatch(getSleepTrackersByDaysAction(days));
       dispatch(getSleepTrackersByUserIdAction());
     } catch (error) {
@@ -70,7 +69,7 @@ export const getSleepTrackersByDaysAction = (days) => {
   };
 };
 
-export const updateSleepTrackerAction = (trackerId, updateData) => {
+export const updateSleepTrackerAction = (trackerId, updateData, days) => {
   return async (dispatch) => {
     try {
       dispatch(displayLoadingAction);
@@ -81,7 +80,6 @@ export const updateSleepTrackerAction = (trackerId, updateData) => {
         "Success"
       );
       dispatch(hideLoadingAction);
-      const days = "7days";
       dispatch(getSleepTrackersByDaysAction(days));
       dispatch(getSleepTrackersByUserIdAction());
     } catch (error) {

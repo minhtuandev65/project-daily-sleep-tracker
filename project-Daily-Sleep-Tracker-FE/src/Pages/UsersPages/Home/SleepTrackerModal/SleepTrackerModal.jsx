@@ -15,6 +15,7 @@ function SleepTrackerModal({
   trackerId,
   initialValues,
   existingTrackers = [],
+  days,
 }) {
   const dispatch = useDispatch();
   const [sleepTime, setSleepTime] = useState(null);
@@ -25,7 +26,7 @@ function SleepTrackerModal({
       setWakeTime(dayjs(initialValues.wakeTime));
     }
   }, [initialValues]);
-  console.log(existingTrackers)
+  console.log(existingTrackers);
   const handleSubmit = () => {
     if (!sleepTime || !wakeTime) {
       notificationFunction(
@@ -104,10 +105,11 @@ function SleepTrackerModal({
       sleepTime: dayjs(sleepTime).toISOString(),
       wakeTime: dayjs(wakeTime).toISOString(),
     };
+    const rangeStr = days === 7 ? "7days" : "30days";
     if (trackerId) {
-      dispatch(updateSleepTrackerAction(trackerId, data));
+      dispatch(updateSleepTrackerAction(trackerId, data, rangeStr));
     } else {
-      dispatch(createNewSleepTrackersAction(data));
+      dispatch(createNewSleepTrackersAction(data, rangeStr));
     }
     onClose();
   };

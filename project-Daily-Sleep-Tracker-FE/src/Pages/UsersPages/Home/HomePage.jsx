@@ -141,6 +141,7 @@ function HomePageUser() {
           visible={modalVisible}
           onClose={() => setModalVisible(false)}
           existingTrackers={sleepTrackersByUserId}
+          days={days}
         />
       </Content>
     </Layout>

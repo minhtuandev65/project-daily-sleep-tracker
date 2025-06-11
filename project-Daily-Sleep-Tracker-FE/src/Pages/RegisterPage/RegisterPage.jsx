@@ -6,6 +6,7 @@ import { useFormik } from "formik";
 import ButtonCustom from "../../Components/ButtonCustom/ButtonCustom";
 import { registerAction } from "../../Redux/Actions/AuthAction/AuthAction";
 import {
+  containsNumberRegex,
   displayNameRegex,
   emailRegex,
   passwordRegex,
@@ -35,10 +36,13 @@ export default function RegisterPage() {
       // Check error tên hiển thị
       if (!values.displayName) {
         errors.displayName = "Please enter account name!";
+      } else if (containsNumberRegex.test(values.displayName)) {
+        errors.displayName = "Account name cannot contain numbers!";
       } else if (!displayNameRegex.test(values.displayName)) {
         errors.displayName =
-          "Account name must be 4 ~ 10 characters, letters and numbers only, include 2 character!";
+          "Account name must be 4 ~ 50 characters, letters only, and include at least 2 letters!";
       }
+
       // Check error password
       if (!values.password) {
         errors.password = "Please enter password!";

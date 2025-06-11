@@ -3,4 +3,6 @@ export const emailRegex =
 
 export const passwordRegex =
   /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
-export const displayNameRegex = /^(?=(?:.*[A-Za-z]){2,})[A-Za-z0-9]{4,10}$/;
+export const displayNameRegex = /^(?=(?:.*[A-Za-z]){2,})[A-Za-z]{4,50}$/;
+// Check có nhập số hay không
+export const containsNumberRegex = /\d/;
