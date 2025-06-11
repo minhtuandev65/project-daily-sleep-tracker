@@ -79,7 +79,8 @@ export const registerAction = (registerData, navigate) => {
         notificationFunction(
           "success",
           "Registration successful, please check your email to verify your account!",
-          "Success"
+          "Success",
+          30
         );
         navigate("/login");
       } else {
@@ -87,7 +88,8 @@ export const registerAction = (registerData, navigate) => {
         notificationFunction(
           "error",
           "Unexpected response from server.",
-          "Register failed"
+          "Register failed",
+          30
         );
       }
 
