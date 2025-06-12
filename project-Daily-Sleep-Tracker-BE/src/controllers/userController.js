@@ -130,8 +130,10 @@ const getMyProfile = async (req, res, next) => {
     try {
         let userId = req.payload._id
 
-        const result = await userService.getMyProfile(userId)
-        res.status(StatusCodes.OK).json(result)
+        const resultArray = await userService.getMyProfile(userId)
+        const result = resultArray[0]
+        const { _id, email, verifyToken, isActive, _destroy, ...data } = result
+        res.status(StatusCodes.OK).json(data)
     } catch (error) {
         next(error)
     }
