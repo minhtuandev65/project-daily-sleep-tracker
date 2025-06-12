@@ -27,7 +27,7 @@ const updateSleepTracker = async (req, res, next) => {
         }
         await sleepTrackersService.updateSleepTraker(trackerId, data)
         res.status(StatusCodes.OK).json({
-            message: 'Cập nhật bản ghi giấc ngủ thành công',
+            message: 'success',
             data: req.body
         })
     } catch (error) {
@@ -37,17 +37,8 @@ const updateSleepTracker = async (req, res, next) => {
 const getSleepTrackerstByUserId = async (req, res, next) => {
     try {
         const userId = req.payload._id
-        if (!userId) {
-            return res.status(400).json({
-                message: 'User ID is required'
-            })
-        }
-        const result =
-            await sleepTrackersService.getSleepTrackersByUserId(userId)
-        res.status(200).json({
-            message: 'Lấy dữ liệu giấc ngủ thành công',
-            data: result
-        })
+        const data = await sleepTrackersService.getSleepTrackersByUserId(userId)
+        res.status(StatusCodes.OK).json(data)
     } catch (error) {
         next(error)
     }
@@ -55,18 +46,13 @@ const getSleepTrackerstByUserId = async (req, res, next) => {
 const getSleepTrackersByDays = async (req, res, next) => {
     try {
         const userId = req.payload._id
-        if (!userId) {
-            return res.status(400).json({
-                message: 'User ID is required'
-            })
-        }
         const { days } = req.query
         const data = await sleepTrackersService.getSleepStatsByDays(
             userId,
             days
         )
 
-        res.json({ data })
+        res.status(StatusCodes.OK).json(data)
     } catch (error) {
         next(error)
     }

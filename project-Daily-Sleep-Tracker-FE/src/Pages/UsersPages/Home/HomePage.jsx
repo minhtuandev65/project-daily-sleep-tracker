@@ -31,13 +31,13 @@ function HomePageUser() {
     }
   }, [dispatch, days]);
   useEffect(() => {
-    if (
-      modalVisible &&
-      (!sleepTrackersByUserId || sleepTrackersByUserId.length === 0)
-    ) {
-      dispatch(getSleepTrackersByUserIdAction());
+    if (modalVisible) {
+      if (!sleepTrackersByUserId || sleepTrackersByUserId.length === 0) {
+        dispatch(getSleepTrackersByUserIdAction());
+      }
     }
-  }, [modalVisible, dispatch, sleepTrackersByUserId]);
+  }, [modalVisible, dispatch]);
+
   return (
     <Layout className="bg-white min-h-screen px-6 md:px-[150px] py-[50px]">
       <Content>

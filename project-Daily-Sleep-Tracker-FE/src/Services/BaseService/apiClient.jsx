@@ -1,24 +1,32 @@
+
 import axios from "axios";
-import { DOMAIN, TOKEN } from "../../Utils/Setting/Config";
+import { DOMAIN } from "../../Utils/Setting/Config";
+
+const isMobile = /Mobi|Android|iPhone/i.test(navigator.userAgent);
 
 const apiClient = axios.create({
   baseURL: DOMAIN,
-  withCredentials: true,
+  withCredentials: true, // dùng cho cookie ở desktop
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
-    Authorization: `Bearer ${TOKEN}`
+    // KHÔNG để Authorization mặc định ở đây
   },
 });
 
+// 🛡️ Gắn Authorization chỉ khi là mobile
 apiClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem("accessToken");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+  if (isMobile) {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
   }
+
   return config;
 });
 
+// ⚠️ Control refresh token logic chỉ cho mobile
 let isRefreshing = false;
 
 apiClient.interceptors.response.use(
@@ -27,14 +35,13 @@ apiClient.interceptors.response.use(
     const originalRequest = error.config;
 
     // Nếu access token hết hạn
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (isMobile && error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
-      // Ngăn chặn gọi refresh token trùng lặp
       if (!isRefreshing) {
         isRefreshing = true;
         try {
-          const { data } = await apiClient.get("api/users/refresh_token");
+          const { data } = await apiClient.get("/api/users/refresh_token");
           const newToken = data.accessToken;
           localStorage.setItem("accessToken", newToken);
 
@@ -43,20 +50,18 @@ apiClient.interceptors.response.use(
           isRefreshing = false;
           return apiClient(originalRequest);
         } catch (refreshError) {
-          // Nếu refresh token cũng hết hạn → gọi logout
           console.error("Refresh token hết hạn:", refreshError);
           isRefreshing = false;
 
           try {
-            await apiClient.post("api/users/logout");
+            await apiClient.post("/api/users/logout");
           } catch (logoutErr) {
             console.warn("Logout lỗi:", logoutErr);
           }
 
-          // Clear token và redirect về login (tùy ứng dụng bạn xử lý router)
-          localStorage.removeItem(TOKEN);
-          window.location.href = "/login"; // hoặc dùng navigate("/login") nếu dùng React Router
-
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("refreshToken");
+          window.location.href = "/login";
           return Promise.reject(refreshError);
         }
       }

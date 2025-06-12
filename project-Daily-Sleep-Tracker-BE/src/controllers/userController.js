@@ -35,11 +35,8 @@ const authenticate = async (req, res, next) => {
             maxAge: ms('14 days')
         })
 
-        // delete authenticated.accessToken
-        // delete authenticated.refreshToken
-        // console.log('accessToken in request.cookies:', req.cookies.accessToken)
-
-        res.status(StatusCodes.OK).json(authenticated)
+        const { _id, email, ...data } = authenticated
+        res.status(StatusCodes.OK).json(data)
     } catch (error) {
         next(error)
     }
@@ -141,8 +138,8 @@ const getMyProfile = async (req, res, next) => {
 const checkRole = async (req, res, next) => {
     try {
         const payload = await userService.checkRole(req.body)
-        // payload = { email, role: ['USER'] } (mảng hoặc chuỗi tuỳ bạn thiết kế)
-        res.status(StatusCodes.OK).json(payload)
+        const { email, ...data } = payload
+        res.status(StatusCodes.OK).json(data)
     } catch (err) {
         next(err)
     }

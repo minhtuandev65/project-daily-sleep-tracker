@@ -4,14 +4,14 @@ import { JwtProvider } from '~/providers/JwtProvider'
 import ApiError from '~/utils/ApiError'
 
 const isAuthorized = async (req, res, next) => {
-    // Lấy token từ header Authorization (Bearer token)
+    // Lấy token từ cookie trước
+    const tokenFromCookie = req.cookies?.accessToken
+    // Nếu không có trong cookie thì mới lấy từ header
     const authHeader = req.headers['authorization']
     const tokenFromHeader = authHeader && authHeader.split(' ')[1]
-    // Lấy token từ cookie
-    const tokenFromCookie = req.cookies?.accessToken
 
-    // Ưu tiên token từ header nếu có, nếu không thì lấy token từ cookie
-    const accessToken = tokenFromHeader || tokenFromCookie
+    // Ưu tiên token từ cookie nếu có, nếu không thì lấy token từ header
+    const accessToken = tokenFromCookie || tokenFromHeader
     if (!accessToken) {
         next(new ApiError(StatusCodes.UNAUTHORIZED, 'Token not found'))
 

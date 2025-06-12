@@ -12,6 +12,8 @@ export const loginAction = (credentials, navigate) => {
   return async (dispatch) => {
     const { email } = credentials;
 
+    const isMobile = /Mobi|Android|iPhone/i.test(navigator.userAgent);
+
     const handleNavigateAndNotify = (role) => {
       const path = role.includes("ADMIN") ? "/admin" : "/home";
       navigate(path);
@@ -32,9 +34,14 @@ export const loginAction = (credentials, navigate) => {
         role,
       });
 
-      localStorage.setItem("USER_LOGIN", JSON.stringify({ email, role }));
-      localStorage.setItem("accessToken", userData.accessToken);
-      localStorage.setItem("refreshToken", userData.refreshToken);
+      if (isMobile) {
+        localStorage.setItem("accessToken", userData.accessToken);
+        localStorage.setItem("refreshToken", userData.refreshToken);
+      } else {
+        // Không lưu token trên desktop
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+      }
 
       dispatch({
         type: SET_LOGIN,
@@ -46,12 +53,11 @@ export const loginAction = (credentials, navigate) => {
       dispatch(hideLoadingAction);
     } catch (error) {
       dispatch(hideLoadingAction);
-      const message = error?.response?.data?.message || "Registration failed!";
-      notificationFunction("error", message, "Register failed");
+      const message = error?.response?.data?.message || "Login failed!";
+      notificationFunction("error", message, "Login failed");
     }
   };
 };
-
 // Tạo action để đăng xuất
 export const logoutAction = () => {
   return async (dispatch) => {
@@ -75,7 +81,7 @@ export const registerAction = (registerData, navigate) => {
     try {
       dispatch(displayLoadingAction);
       const response = await authServices.register(registerData); // nên return từ axios
-      if (response?.status === 200 || response?.status === 201) {
+      if (response?.status === 201) {
         notificationFunction(
           "success",
           "Registration successful, please check your email to verify your account!",

@@ -16,7 +16,7 @@ export const getSleepTrackersByUserIdAction = () => {
       const result = await sleepTrackersServices.getSleepTrackersByUserId();
       dispatch({
         type: SET_GET_SLEEP_TRACKERS_BY_USERID,
-        payload: result.data.data,
+        payload: result.data,
       });
       dispatch(hideLoadingAction);
     } catch (error) {
@@ -55,7 +55,7 @@ export const getSleepTrackersByDaysAction = (days) => {
       const result = await sleepTrackersServices.getSleepTrackersByDays(days);
       dispatch({
         type: SET_GET_SLEEP_TRACKERS_BY_DAYS,
-        payload: result.data.data,
+        payload: result.data,
       });
       dispatch(hideLoadingAction);
     } catch (error) {
