@@ -10,7 +10,7 @@
 
 ## 🧠 Tính năng chính
 
-- Đăng ký / đăng nhập / quên mật khẩu, xác thực qua email ( xác thực bằng email )
+- Đăng ký / đăng nhập / quên mật khẩu, xác thực qua email ( xác thực bằng email thật qua hộp thư email )
 - Ghi lại thời gian đi ngủ và thức dậy
 - Hiển thị biểu đồ thời gian ngủ theo ngày/tuần
 - Thống kê tổng thời gian ngủ, Thời gian ngủ trung bình trong tuần.
@@ -25,7 +25,7 @@
 
 | Stack        | Chi tiết                                                                         |
 | ------------ | -------------------------------------------------------------------------------- |
-| 🧩 Framework | [React 18](https://reactjs.org/) + [Vite](https://vitejs.dev/)                   |
+| 🧩 Framework | [React 20](https://reactjs.org/) + [Vite](https://vitejs.dev/)                   |
 | 📦 UI        | [Ant Design](https://ant.design/), [Material UI](https://mui.com/), Tailwind CSS |
 | 🔄 State     | Redux Toolkit + Redux Thunk + Redux Persist                                      |
 | ⏱ Date/Time  | `dayjs`                                                                          |
@@ -50,9 +50,3 @@ npm run dev
 # 4. Build production ( khi deploy project )
 npm run build
 
-
-------------------- Acount ----------------------
--- TK: huynhminhtuan13032003@gmail.com
--- MK: huynhminhtuan13032003
--- Có thể tạo nick mới để test bằng gmail thật nha
-```
