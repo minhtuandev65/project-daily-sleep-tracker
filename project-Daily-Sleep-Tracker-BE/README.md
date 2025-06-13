@@ -56,4 +56,7 @@ npm run dev
 
 # 4. Build production ( khi deploy project )
 npm run production
+
+#5 chạy unit test cho project
+npm run test
 ```
