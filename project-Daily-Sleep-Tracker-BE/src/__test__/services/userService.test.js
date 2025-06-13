@@ -3,21 +3,26 @@ import { userModel } from '~/models/userModel'
 import { JwtProvider } from '~/providers/JwtProvider'
 import { ResendProvider } from '~/providers/ResendProvider'
 import { env } from '~/config/environment'
+import ApiError from '~/utils/ApiError'
 import bcrypt from 'bcryptjs'
 import dayjs from 'dayjs'
 import ms from 'ms'
-import { loadHtmlTemplate } from '~/template/loadHtmlTemplate'
 
-// Mock toàn bộ dependency
+// Mock phụ thuộc
 jest.mock('~/models/userModel')
 jest.mock('~/providers/JwtProvider')
 jest.mock('~/providers/ResendProvider')
-jest.mock('~/template/loadHtmlTemplate')
-jest.mock('bcryptjs', () => ({
-    hash: jest.fn(),
-    compareSync: jest.fn()
-}))
-
+jest.mock('bcryptjs')
+jest.mock('dayjs', () => {
+    const actual = jest.requireActual('dayjs')
+    return () => actual('2023-01-01T00:00:00Z') // luôn cố định thời gian
+})
+jest.mock('~/template/createNew', () => jest.fn())
+import verifyEmailTemplate from '~/template/createNew'
+jest.mock('~/template/forgotPasswordMailTemplate', () => jest.fn())
+import forgotPasswordTemplate from '~/template/forgotPasswordMailTemplate'
+jest.mock('~/template/resetPasswordSuccessTemplate', () => jest.fn())
+import passwordResetSuccessTemplate from '~/template/resetPasswordSuccessTemplate'
 describe('userService', () => {
     beforeEach(() => {
         jest.clearAllMocks()
@@ -41,7 +46,7 @@ describe('userService', () => {
                 verifyToken: 'verify-token'
             })
 
-            loadHtmlTemplate.mockReturnValue('<html>Email content</html>')
+            verifyEmailTemplate.mockReturnValue('<html>Email content</html>')
 
             await userService.createNew(reqBody)
 
@@ -102,7 +107,7 @@ describe('userService', () => {
 
             JwtProvider.generateToken.mockResolvedValue('reset-token')
 
-            loadHtmlTemplate.mockReturnValue('<html>Email content</html>')
+            forgotPasswordTemplate.mockReturnValue('<html>Email content</html>')
 
             await userService.forgotPassword(reqBody)
             expect(ResendProvider.sendMail).toHaveBeenCalled()
@@ -129,7 +134,7 @@ describe('userService', () => {
             })
 
             bcrypt.hash.mockResolvedValue('hashed_new_pw')
-            loadHtmlTemplate.mockReturnValue('<html>Success email</html>')
+            passwordResetSuccessTemplate.mockReturnValue('<html>Success email</html>')
 
             const result = await userService.resetPassword({
                 token,

@@ -10,7 +10,9 @@ import { APP_LOGO, ROLE, WEBSITE_DOMAIN } from '~/utils/constants'
 import { ResendProvider } from '~/providers/ResendProvider'
 import dayjs from 'dayjs'
 import ms from 'ms'
-import { loadHtmlTemplate } from '~/template/loadHtmlTemplate'
+import verifyEmailTemplate from '~/template/createNew'
+import forgotPasswordTemplate from '~/template/forgotPasswordMailTemplate'
+import passwordResetSuccessTemplate from '~/template/resetPasswordSuccessTemplate'
 
 const createNew = async (reqBody) => {
     const existingUser = await userModel.findByEmail(reqBody.email)
@@ -47,7 +49,7 @@ const createNew = async (reqBody) => {
     const verificationLink = `${WEBSITE_DOMAIN}/account/verification?email=${getNewUser.email}&token=${getNewUser.verifyToken}`
     const customSubject =
         'Daily Sleep Tracker system: Please verify your email before using our services!'
-    const htmlContent = loadHtmlTemplate('./createNew.html', {
+    const htmlContent = verifyEmailTemplate({
         username: getNewUser.username,
         verificationLink: verificationLink
     })
@@ -214,15 +216,12 @@ const forgotPassword = async (reqBody) => {
                 .toDate()
         })
 
-        const forgotPasswordMailTemplate = loadHtmlTemplate(
-            './forgotPasswordMailTemplate.html',
-            {
-                APP_LOGO: APP_LOGO,
-                confirmationLink: confirmationLink,
-                FORGOT_PASSWORD_TOKEN_LIFE: env.FORGOT_PASSWORD_TOKEN_LIFE,
-                year: dayjs().year()
-            }
-        )
+        const forgotPasswordMailTemplate = forgotPasswordTemplate({
+            APP_LOGO: APP_LOGO,
+            confirmationLink: confirmationLink,
+            FORGOT_PASSWORD_TOKEN_LIFE: env.FORGOT_PASSWORD_TOKEN_LIFE,
+            year: dayjs().year()
+        })
 
         await ResendProvider.sendMail(
             existUser.email,
@@ -279,15 +278,12 @@ const resetPassword = async (reqBody) => {
         }
 
         await userModel.update(existUser._id, updatedUser)
-        const resetPasswordSuccessTemplate = loadHtmlTemplate(
-            './resetPasswordSuccessTemplate.html',
-            {
-                username: existUser.username,
-                loginUrl: `${WEBSITE_DOMAIN}/login`,
-                year: dayjs().year(),
-                APP_LOGO: APP_LOGO
-            }
-        )
+        const resetPasswordSuccessTemplate = passwordResetSuccessTemplate({
+            username: existUser.username,
+            loginUrl: `${WEBSITE_DOMAIN}/login`,
+            year: dayjs().year(),
+            APP_LOGO: APP_LOGO
+        })
         await ResendProvider.sendMail(
             existUser.email,
             'Reset password success notification email',

@@ -7,10 +7,10 @@ import { APIs_v1 } from './routes/v1'
 import { errorHandlingMiddleware } from './middlewares/errorHandlingMiddleware'
 import { env } from './config/environment'
 import { corsOptions } from './config/cors'
-
+import path from 'path'
 const START_SERVER = () => {
     const app = express()
-
+    const __dirname = path.resolve()
     app.use((req, res, next) => {
         res.set('Cache-Control', 'no-store')
         next()
