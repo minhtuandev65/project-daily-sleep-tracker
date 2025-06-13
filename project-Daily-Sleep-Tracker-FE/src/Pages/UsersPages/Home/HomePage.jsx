@@ -30,6 +30,7 @@ function HomePageUser() {
       dispatch(getSleepTrackersByDaysAction(rangeStr));
     }
   }, [dispatch, days]);
+
   useEffect(() => {
     if (modalVisible) {
       if (!sleepTrackersByUserId || sleepTrackersByUserId.length === 0) {

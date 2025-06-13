@@ -1,4 +1,4 @@
-// SleepTrackersController.js
+//src/controllers/sleepTrackersController.js
 import { sleepTrackersService } from '~/services/sleepTrackersServices'
 import { StatusCodes } from 'http-status-codes'
 const createNew = async (req, res, next) => {

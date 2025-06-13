@@ -67,8 +67,7 @@ function SleepTrackerModal({
     }
 
     // Kiểm tra trùng thời gian với các bản ghi cũ (nếu có truyền existingTrackers vào)
-    const dataExistingTrackers = existingTrackers.sleepTrackers;
-    console.log("dataExistingTrackers", dataExistingTrackers);
+
     if (existingTrackers && existingTrackers.length > 0) {
       const isOverlapping = existingTrackers.some((tracker) => {
         // Nếu đang update thì bỏ qua bản ghi hiện tại
@@ -91,7 +90,7 @@ function SleepTrackerModal({
             wake.isSame(existingWake))
         );
       });
-      console.log("isOverlapping", isOverlapping);
+     
       if (isOverlapping) {
         notificationFunction(
           "error",

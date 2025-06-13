@@ -1,7 +1,7 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { render, screen } from "@testing-library/react";
-import SplashScreenPage from "./SplashScreenPage";
+import SplashScreenPage from "../../Pages/SplashScreenPage/SplashScreenPage";
 
 describe("SplashScreenPage", () => {
   beforeEach(() => {

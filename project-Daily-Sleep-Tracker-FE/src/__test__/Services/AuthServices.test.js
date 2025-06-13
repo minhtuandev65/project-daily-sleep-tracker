@@ -1,9 +1,9 @@
 // Import class cần test
-import { AuthServices } from "./AuthServices";
+import { AuthServices } from "../../Services/Auth/AuthServices";
 // Import apiClient sau khi mock
-import apiClient from "../BaseService/apiClient";
+import apiClient from "../../Services/BaseService/apiClient";
 // Mock toàn bộ apiClient
-jest.mock("../BaseService/apiClient", () => ({
+jest.mock("../../Services/BaseService/apiClient", () => ({
   post: jest.fn(),
   get: jest.fn(),
 }));

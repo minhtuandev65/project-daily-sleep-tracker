@@ -94,7 +94,7 @@ export default function RegisterPage() {
         <div className="mb-6">
           {touched.displayName && errors.displayName && (
             <Typography.Text type="danger">
-              * {errors.displayName}
+              {errors.displayName}
             </Typography.Text>
           )}
           <Input
@@ -113,7 +113,7 @@ export default function RegisterPage() {
         {/* PASSWORD */}
         <div className="mb-6">
           {touched.password && errors.password && (
-            <Typography.Text type="danger">* {errors.password}</Typography.Text>
+            <Typography.Text type="danger">{errors.password}</Typography.Text>
           )}
           <Input.Password
             name="password"
@@ -130,7 +130,7 @@ export default function RegisterPage() {
         <div className="mb-6">
           {touched.xacNhanMatKhau && errors.xacNhanMatKhau && (
             <Typography.Text type="danger">
-              * {errors.xacNhanMatKhau}
+              {errors.xacNhanMatKhau}
             </Typography.Text>
           )}
           <Input.Password
@@ -151,7 +151,7 @@ export default function RegisterPage() {
         {/* EMAIL */}
         <div className="mb-6">
           {touched.email && errors.email && (
-            <Typography.Text type="danger">* {errors.email}</Typography.Text>
+            <Typography.Text type="danger">{errors.email}</Typography.Text>
           )}
           <Input
             name="email"

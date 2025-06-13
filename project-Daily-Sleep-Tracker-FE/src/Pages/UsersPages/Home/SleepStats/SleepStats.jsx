@@ -132,6 +132,7 @@ function SleepStats({ days, data }) {
         onClose={handleCloseModal}
         trackerId={selectedTracker?._id}
         initialValues={selectedTracker}
+        
       />
     </>
   );

@@ -10,6 +10,7 @@ import { APP_LOGO, ROLE, WEBSITE_DOMAIN } from '~/utils/constants'
 import { ResendProvider } from '~/providers/ResendProvider'
 import dayjs from 'dayjs'
 import ms from 'ms'
+import { loadHtmlTemplate } from '~/template/loadHtmlTemplate'
 
 const createNew = async (reqBody) => {
     const existingUser = await userModel.findByEmail(reqBody.email)
@@ -46,70 +47,10 @@ const createNew = async (reqBody) => {
     const verificationLink = `${WEBSITE_DOMAIN}/account/verification?email=${getNewUser.email}&token=${getNewUser.verifyToken}`
     const customSubject =
         'Daily Sleep Tracker system: Please verify your email before using our services!'
-    const htmlContent = `
-    <!DOCTYPE html>
-      <html lang="en">
-      <head>
-        <meta charset="UTF-8">
-        <title>Verify Your Email</title>
-        <style>
-          body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-          }
-          .container {
-            max-width: 600px;
-            margin: 40px auto;
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-          }
-          h2 {
-            color: #333333;
-          }
-          p {
-            font-size: 16px;
-            color: #555555;
-            line-height: 1.6;
-          }
-          .button {
-            display: inline-block;
-            padding: 12px 20px;
-            margin-top: 20px;
-            background-color: #007bff;
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 5px;
-          }
-          .footer {
-            margin-top: 30px;
-            font-size: 13px;
-            color: #999999;
-            text-align: center;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <h2>Welcome to Daily Sleep Tracker!</h2>
-          <p>Hi ${getNewUser.username},</p>
-          <p>Thank you for creating an account with us. Please confirm your email address by clicking the button below:</p>
-
-          <a href="${verificationLink}" class="button">Verify Your Email</a>
-
-          <p>If the button doesn't work, copy and paste this URL into your browser:</p>
-          <p style="word-break: break-all;"><a href="${verificationLink}">Verification link</a></p>
-
-          <div class="footer">
-            <p>If you didn’t create this account, you can safely ignore this email.</p>
-          </div>
-        </div>
-      </body>
-      </html>
-  `
+    const htmlContent = loadHtmlTemplate('./createNew.html', {
+        username: getNewUser.username,
+        verificationLink: verificationLink
+    })
 
     await ResendProvider.sendMail(getNewUser.email, customSubject, htmlContent)
     return getNewUser
@@ -273,63 +214,16 @@ const forgotPassword = async (reqBody) => {
                 .toDate()
         })
 
-        const forgotPasswordMailTemplate = `<!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="UTF-8" />
-        <title>Forgot Password</title>
-      </head>
-      <body style="margin:0; padding:0; font-family:Arial, sans-serif; background-color:#f4f4f4;">
+        const forgotPasswordMailTemplate = loadHtmlTemplate(
+            './forgotPasswordMailTemplate.html',
+            {
+                APP_LOGO: APP_LOGO,
+                confirmationLink: confirmationLink,
+                FORGOT_PASSWORD_TOKEN_LIFE: env.FORGOT_PASSWORD_TOKEN_LIFE,
+                year: dayjs().year()
+            }
+        )
 
-         <!-- Header -->
-  <table width="100%" cellpadding="0" cellspacing="0">
-    <tr>
-      <td align="center">
-        <table width="100%" bgcolor="#ffffff" cellpadding="30" cellspacing="0" style="margin: 0px auto; border-radius: 8px;">
-          <tr>
-            <td align="center">
-              <img src="${APP_LOGO}" alt="Logo" style="width: 600px; display: block; margin: 0 auto;" />
-
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
-
-        <!-- Body -->
-        <table width="100%" cellpadding="0" cellspacing="0">
-          <tr>
-            <td align="center">
-              <table width="600" bgcolor="#ffffff" cellpadding="30" cellspacing="0" style="margin: 20px auto; border-radius: 8px;">
-                <tr>
-                  <td>
-                    <h2 style="color:#333;">Reset Your Password</h2>
-                    <p style="color:#555; font-size:16px;">We received a request to reset your password. Click the button below to set a new one.</p>
-                    <p style="text-align:center; margin: 30px 0;">
-                      <a href="${confirmationLink}" style="background-color:#000000; color:#ffffff; padding: 12px 24px; text-decoration:none; border-radius:5px; font-weight:bold;">Reset Password</a>
-                    </p>
-                    <p style="color:#888; font-size:14px;">If you didn’t request a password reset, you can safely ignore this email.</p>
-                    <p style="color:#888; font-size:14px;">This link will expire in ${env.FORGOT_PASSWORD_TOKEN_LIFE} minutes.</p>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-        </table>
-
-        <!-- Footer -->
-        <table width="100%" cellpadding="20">
-          <tr>
-            <td align="center" style="font-size:12px; color:#aaa;">
-              &copy; ${dayjs().year()} Daily Sleep Tracker. All rights reserved.
-            </td>
-          </tr>
-        </table>
-
-      </body>
-      </html>
-      `
         await ResendProvider.sendMail(
             existUser.email,
             'Forgot password confirmation email',
@@ -384,67 +278,16 @@ const resetPassword = async (reqBody) => {
             resetPasswordExpired: null
         }
 
-        const resetPasswordSuccessTemplate = `<!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="UTF-8" />
-        <title>Password Reset Successful</title>
-      </head>
-      <body style="margin:0; padding:0; font-family:Arial, sans-serif; background-color:#f4f4f4;">
-
-        <!-- Header -->
-  <table width="100%" cellpadding="0" cellspacing="0">
-    <tr>
-      <td align="center">
-        <table width="100%" bgcolor="#ffffff" cellpadding="30" cellspacing="0" style="margin: 0px auto; border-radius: 8px;">
-          <tr>
-            <td align="center">
-              <img src="${APP_LOGO}" alt="Logo" style="width: 600px; display: block; margin: 0 auto;" />
-
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
-
-        <!-- Main Content -->
-        <table width="100%" cellpadding="0" cellspacing="0">
-          <tr>
-            <td align="center">
-              <table width="600" bgcolor="#ffffff" cellpadding="30" cellspacing="0" style="margin: 20px auto; border-radius: 8px;">
-                <tr>
-                  <td>
-                    <h2 style="color:#333;">Your Password Has Been Changed</h2>
-                    <p style="color:#555; font-size:16px;">Hi ${existUser.username},</p>
-                    <p style="color:#555; font-size:16px;">We’re just letting you know that your password was successfully reset. If this was you, there’s nothing more to do.</p>
-                    <p style="color:#555; font-size:16px;">If you did not perform this action, please contact our support immediately to secure your account.</p>
-                    <p style="margin-top: 30px;">
-                      <a href="${WEBSITE_DOMAIN}/login" style="background-color:#000000; color:#ffffff; padding:12px 24px; text-decoration:none; border-radius:5px; font-weight:bold;">Log In</a>
-                    </p>
-                    <p style="color:#888; font-size:14px;">Thanks,<br/>The Daily Sleep Tracker Team</p>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-        </table>
-
-        <!-- Footer -->
-        <table width="100%" cellpadding="20">
-          <tr>
-            <td align="center" style="font-size:12px; color:#aaa;">
-              &copy; ${dayjs().year()} Daily Sleep Tracker. All rights reserved.
-            </td>
-          </tr>
-        </table>
-
-      </body>
-      </html>
-      `
-
         await userModel.update(existUser._id, updatedUser)
-
+        const resetPasswordSuccessTemplate = loadHtmlTemplate(
+            './resetPasswordSuccessTemplate.html',
+            {
+                username: existUser.username,
+                loginUrl: `${WEBSITE_DOMAIN}/login`,
+                year: dayjs().year(),
+                APP_LOGO: APP_LOGO
+            }
+        )
         await ResendProvider.sendMail(
             existUser.email,
             'Reset password success notification email',

@@ -1,5 +1,5 @@
-import { AuthReducer } from "./AuthReducer";
-import { SET_LOGIN, SET_GET_MY_PROFILE } from "../../type/AuthType/AuthType";
+import { AuthReducer } from "../../../Redux/Reducer/AuthReducer/AuthReducer";
+import { SET_LOGIN, SET_GET_MY_PROFILE } from "../../../Redux/type/AuthType/AuthType";
 
 describe("AuthReducer", () => {
   const initialState = {

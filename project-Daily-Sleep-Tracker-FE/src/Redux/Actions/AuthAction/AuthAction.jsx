@@ -70,8 +70,9 @@ export const logoutAction = () => {
       localStorage.removeItem("refreshToken");
       dispatch(hideLoadingAction);
     } catch (error) {
-      notificationFunction("error", "Logout failed: ", "Error");
       dispatch(hideLoadingAction);
+      const message = error?.response?.data?.message || "Logout failed!";
+      notificationFunction("error", message, "Logout failed");
     }
   };
 };
@@ -121,8 +122,9 @@ export const getMyProfileAction = () => {
       });
       dispatch(hideLoadingAction);
     } catch (error) {
-      notificationFunction("error", "Get user information failed!", "Error");
       dispatch(hideLoadingAction);
+      const message = error?.response?.data?.message || "Get data failed!";
+      notificationFunction("error", message, "Get data failed!");
     }
   };
 };
@@ -135,8 +137,10 @@ export const resetPasswordAction = (password, token) => {
       notificationFunction("success", "Password reset successful!", "Success");
       dispatch(hideLoadingAction);
     } catch (error) {
-      notificationFunction("error", "Password reset failed!", "Error");
       dispatch(hideLoadingAction);
+      const message =
+        error?.response?.data?.message || "Password reset failed!";
+      notificationFunction("error", message, "Password reset failed!");
     }
   };
 };
@@ -176,22 +180,14 @@ export const verifyAcountAction = ({ email, token }, navigate) => {
         email,
         token,
       });
-      if (response?.status === 200 || response?.status === 201) {
+      if (response?.status === 200) {
         notificationFunction(
           "success",
           "Authentication successful!",
           "Success"
         );
         navigate("/login");
-      } else {
-        // fallback nếu server trả status lạ mà không throw lỗi
-        notificationFunction(
-          "error",
-          "Unexpected response from server.",
-          "Verify account failed"
-        );
       }
-
       dispatch(hideLoadingAction);
     } catch (error) {
       dispatch(hideLoadingAction);

@@ -2,15 +2,15 @@
 import React from "react";
 import { Input, Typography } from "antd";
 import { useFormik } from "formik";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import ButtonCustom from "../../Components/ButtonCustom/ButtonCustom";
 import { useDispatch } from "react-redux";
 import { resetPasswordAction } from "../../Redux/Actions/AuthAction/AuthAction";
 const ResetYourPassword = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const url = new URL(window.location.href);
-  const token = url.searchParams.get("token");
+  const { search } = useLocation();
+  const token = new URLSearchParams(search).get("token");
 
   const formik = useFormik({
     initialValues: { password: "" },
@@ -21,7 +21,7 @@ const ResetYourPassword = () => {
         e.password = "Password must be at least 6 characters!";
       return e;
     },
-    onSubmit: async (values, { setSubmitting }) => {
+    onSubmit: async (values) => {
       try {
         const result = await dispatch(
           resetPasswordAction(values.password, token)
@@ -30,10 +30,7 @@ const ResetYourPassword = () => {
           navigate("/login");
         }
       } catch (error) {
-        // đã xử lý catch ở action
-        setError("Something went wrong");
-      } finally {
-        setSubmitting(false);
+        // đã xử lý lỗi ở action
       }
     },
   });

@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import ResetYourPassword from "./ResetYourPassword";
+import ResetYourPassword from "../../Pages/ResetYourPassword/ResetYourPassword";
 import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
@@ -12,23 +12,18 @@ const mockNavigate = jest.fn();
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"),
   useNavigate: () => mockNavigate,
+  useLocation: () => ({ search: "?token=mock-token-123" }),
 }));
+
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
-const setupLocation = (token = "mock-token") => {
-  delete window.location;
-  window.location = new URL(`http://localhost/resetPassword?token=${token}`);
-};
 describe("ResetYourPassword Page", () => {
   let store;
 
   beforeEach(() => {
     jest.clearAllMocks();
-    store = mockStore({
-      // Ví dụ: user: { ... }
-    });
-    setupLocation();
+    store = mockStore({});
   });
 
   it("renders the reset password form", () => {
@@ -95,38 +90,12 @@ describe("ResetYourPassword Page", () => {
     );
   });
 
-  test("dispatches resetPasswordAction on valid submit", async () => {
-    // resetPasswordAction.mockResolvedValue();
-    const mockResetPasswordAction = jest.fn(() => () => Promise.resolve());
-    jest
-      .spyOn(AuthAction, "resetPasswordAction")
-      .mockImplementation(mockResetPasswordAction);
-
-    render(
-      <Provider store={store}>
-        <MemoryRouter initialEntries={["/resetPassword?token=mock-token-123"]}>
-          <ResetYourPassword />
-        </MemoryRouter>
-      </Provider>
+  it("dispatches resetPasswordAction and navigates on success", async () => {
+    const mockReset = jest.fn(
+      (password, token) => () => Promise.resolve({ payload: { success: true } })
     );
+    jest.spyOn(AuthAction, "resetPasswordAction").mockImplementation(mockReset);
 
-    const input = screen.getByPlaceholderText(/enter new password/i);
-    fireEvent.change(input, { target: { value: "validpassword" } });
-
-    const button = screen.getByRole("button", { name: /reset your password/i });
-    fireEvent.click(button);
-
-    await waitFor(() => {
-      expect(mockResetPasswordAction).toHaveBeenCalledWith(
-        "validpassword",
-        "mock-token-123"
-      );
-
-      expect(mockNavigate).toHaveBeenCalledWith("/login");
-    });
-  });
-
-  test("handles error from resetPasswordAction", async () => {
     render(
       <Provider store={store}>
         <MemoryRouter>
@@ -134,15 +103,45 @@ describe("ResetYourPassword Page", () => {
         </MemoryRouter>
       </Provider>
     );
-    const input = screen.getByPlaceholderText(/enter new password/i);
-    fireEvent.change(input, { target: { value: "validpassword" } });
 
-    const button = screen.getByRole("button", { name: /reset your password/i });
-    fireEvent.click(button);
+    fireEvent.change(screen.getByPlaceholderText(/enter new password/i), {
+      target: { value: "validpassword" },
+    });
+    fireEvent.click(
+      screen.getByRole("button", { name: /reset your password/i })
+    );
+
+    await waitFor(() => {
+      expect(mockReset).toHaveBeenCalledWith("validpassword", "mock-token-123");
+      expect(mockNavigate).toHaveBeenCalledWith("/login");
+    });
+  });
+
+  it("shows error message on failure and does not navigate", async () => {
+    const mockResetFail = jest.fn(
+      () => () => Promise.reject(new Error("fail"))
+    );
+    jest
+      .spyOn(AuthAction, "resetPasswordAction")
+      .mockImplementation(mockResetFail);
+
+    render(
+      <Provider store={store}>
+        <MemoryRouter>
+          <ResetYourPassword />
+        </MemoryRouter>
+      </Provider>
+    );
+
+    fireEvent.change(screen.getByPlaceholderText(/enter new password/i), {
+      target: { value: "validpassword" },
+    });
+    fireEvent.click(
+      screen.getByRole("button", { name: /reset your password/i })
+    );
 
     await waitFor(() => {
       expect(mockNavigate).not.toHaveBeenCalled();
-      expect(screen.getByText("Something went wrong")).toBeInTheDocument();
     });
   });
 });

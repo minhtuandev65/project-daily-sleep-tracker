@@ -1,8 +1,8 @@
-import { SleepTrackersReducer } from "./SleepTrackersReducer";
+import { SleepTrackersReducer } from "../../../Redux/Reducer/UsersReducer/SleepTrackersReducer/SleepTrackersReducer";
 import {
   SET_GET_SLEEP_TRACKERS_BY_USERID,
   SET_GET_SLEEP_TRACKERS_BY_DAYS,
-} from "../../../type/UserType/sleepTrackersType/sleepTrackersType";
+} from "../../../Redux/type/UserType/sleepTrackersType/sleepTrackersType";
 
 describe("SleepTrackersReducer", () => {
   const initialState = {

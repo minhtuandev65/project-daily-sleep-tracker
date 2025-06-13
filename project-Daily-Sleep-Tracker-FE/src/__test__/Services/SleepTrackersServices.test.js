@@ -1,9 +1,8 @@
-
-import { sleepTrackersServices } from "./SleepTrackersServices";
-import apiClient from "../../BaseService/apiClient";
+import { sleepTrackersServices } from "../../Services/UserServices/SleepTrackersServices/SleepTrackersServices";
+import apiClient from "../../Services/BaseService/apiClient";
 
 // Mock apiClient
-jest.mock("../../BaseService/apiClient", () => ({
+jest.mock("../../Services/BaseService/apiClient", () => ({
   get: jest.fn(),
   post: jest.fn(),
   put: jest.fn(),

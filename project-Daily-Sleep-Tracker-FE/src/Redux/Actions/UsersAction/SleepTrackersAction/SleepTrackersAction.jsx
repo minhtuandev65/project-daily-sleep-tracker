@@ -14,18 +14,16 @@ export const getSleepTrackersByUserIdAction = () => {
     try {
       dispatch(displayLoadingAction);
       const result = await sleepTrackersServices.getSleepTrackersByUserId();
+      console.log("Action", result.data);
       dispatch({
         type: SET_GET_SLEEP_TRACKERS_BY_USERID,
         payload: result.data,
       });
       dispatch(hideLoadingAction);
     } catch (error) {
-      notificationFunction(
-        "error",
-        "Error retrieving sleep trackers by userId!",
-        "Error"
-      );
       dispatch(hideLoadingAction);
+      const message = error?.response?.data?.message || "Get data failed!";
+      notificationFunction("error", message, "Get data failed");
     }
   };
 };
@@ -43,8 +41,9 @@ export const createNewSleepTrackersAction = (sleepTrackersData, days) => {
       dispatch(getSleepTrackersByDaysAction(days));
       dispatch(getSleepTrackersByUserIdAction());
     } catch (error) {
-      notificationFunction("error", "Sleep tracker creation failed!", "Error");
       dispatch(hideLoadingAction);
+      const message = error?.response?.data?.message || "Create failed!";
+      notificationFunction("error", message, "Create failed");
     }
   };
 };
@@ -59,12 +58,9 @@ export const getSleepTrackersByDaysAction = (days) => {
       });
       dispatch(hideLoadingAction);
     } catch (error) {
-      notificationFunction(
-        "error",
-        "Error retrieving sleep trackers by day!",
-        "Error"
-      );
       dispatch(hideLoadingAction);
+      const message = error?.response?.data?.message || "Get data failed!";
+      notificationFunction("error", message, "Get data failed");
     }
   };
 };
@@ -83,8 +79,9 @@ export const updateSleepTrackerAction = (trackerId, updateData, days) => {
       dispatch(getSleepTrackersByDaysAction(days));
       dispatch(getSleepTrackersByUserIdAction());
     } catch (error) {
-      notificationFunction("error", "Error updating sleep tracker!", "Error");
       dispatch(hideLoadingAction);
+      const message = error?.response?.data?.message || "Update failed!";
+      notificationFunction("error", message, "Update failed");
     }
   };
 };
